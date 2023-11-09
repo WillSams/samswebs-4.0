@@ -2,7 +2,7 @@
 
 ## About Me
 
-Experienced Cloud/Software Engineer with 17+ years of diverse solution development for customers. A polyglot with a passion for open-source technologies, AWS certified professional, and small start-ups.  Always seeking to contribute to a tech-focused company or non-profit organizations solving interesting challenges.  U.S. Army veteran.
+Experienced Cloud/Software Engineer with 17+ years experience.  Passionate about open-source technologies, Amazon Web Services, and small start-ups. Seeking to contribute to a tech-focused company or a non-profit organization solving interesting challenges. U.S. Army veteran.
 
 * [LinkedIn](https://www.linkedin.com/in/wsams/ )
 * [GitHub](https://github.com/WillSams/)

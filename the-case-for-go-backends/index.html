@@ -1,0 +1,714 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../improving-the-dev-exp/">
+      
+      
+        <link rel="next" href="../the-case-for-helm/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.8">
+    
+    
+      
+        <title>Comparing TypeScript, Rust, and Go for Backends - Will Sams</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.4b4a2bd9.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#comparing-typescript-rust-and-go-for-backends" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Will Sams" class="md-header__button md-logo" aria-label="Will Sams" data-md-component="logo">
+      
+  <img src="../assets/images/logo-samswebs.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Will Sams
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Comparing TypeScript, Rust, and Go for Backends
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Will Sams" class="md-nav__button md-logo" aria-label="Will Sams" data-md-component="logo">
+      
+  <img src="../assets/images/logo-samswebs.svg" alt="logo">
+
+    </a>
+    Will Sams
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../functional-versus-oop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Paradigm Discussion - Functional versus Object-Oriented Programming
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../improving-the-dev-exp-further/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Further Improving the Developer Experience with Argo CD and GitHub Actions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../improving-the-dev-exp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Improving the Development Experience with Loft & DevSpace
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Comparing TypeScript, Rust, and Go for Backends
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Comparing TypeScript, Rust, and Go for Backends
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#proscons-of-typescript-rust-and-go" class="md-nav__link">
+    Pros/Cons of TypeScript, Rust, and Go
+  </a>
+  
+    <nav class="md-nav" aria-label="Pros/Cons of TypeScript, Rust, and Go">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typescripts-proscons" class="md-nav__link">
+    TypeScript's Pros/Cons
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rusts-proscons" class="md-nav__link">
+    Rust's Pros/Cons
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gos-proscons" class="md-nav__link">
+    Go's Pros/Cons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    Performance
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typescripts-performance" class="md-nav__link">
+    TypeScript's Performance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rusts-performance" class="md-nav__link">
+    Rust's Performance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gos-performance" class="md-nav__link">
+    Go's Performance
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#developer-experience" class="md-nav__link">
+    Developer Experience
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../the-case-for-helm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The Case for Helm Charts Over DevSpace/Loft
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#proscons-of-typescript-rust-and-go" class="md-nav__link">
+    Pros/Cons of TypeScript, Rust, and Go
+  </a>
+  
+    <nav class="md-nav" aria-label="Pros/Cons of TypeScript, Rust, and Go">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typescripts-proscons" class="md-nav__link">
+    TypeScript's Pros/Cons
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rusts-proscons" class="md-nav__link">
+    Rust's Pros/Cons
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gos-proscons" class="md-nav__link">
+    Go's Pros/Cons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    Performance
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#typescripts-performance" class="md-nav__link">
+    TypeScript's Performance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rusts-performance" class="md-nav__link">
+    Rust's Performance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gos-performance" class="md-nav__link">
+    Go's Performance
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#developer-experience" class="md-nav__link">
+    Developer Experience
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="comparing-typescript-rust-and-go-for-backends">Comparing TypeScript, Rust, and Go for Backends</h1>
+<p><img alt="Go Header" src="../assets/images/go-header.png" /></p>
+<p>Creating high-performing, scalable, and budget-friendly backends is pretty darn important for today's software. With all the buzz around serverless setups and cloud computing, your choice of programming language can seriously shake things up in how your app runs and what it costs. So, in this guide, we're going to put TypeScript, Rust, and Go under the microscope, checking out how they fare in terms of performance, scalability, and just how much fun they are for developers to work with. The goal? To suss out the pros and cons of each language, so we can pick the best one for our specific backend-building needs. Let's find find that sweet spot between performance, scalability, and cost-efficiency, all while keeping the developer experience great.</p>
+<h2 id="proscons-of-typescript-rust-and-go">Pros/Cons of TypeScript, Rust, and Go</h2>
+<h3 id="typescripts-proscons">TypeScript's Pros/Cons</h3>
+<p>TypeScript is a handy tool for web app development, especially if we're already a JavaScript pro. However, there are some performance quirks and limitations could make it less ideal for those hefty, complex backends.</p>
+<ul>
+<li>
+<p><strong>Pros:</strong>  One of the great things about TypeScript is how it's fairly painless for developers who know their way around JavaScript. With a big and vibrant community, along with a ton of libraries and tools, it's a go-to pick for building web apps. TypeScript doesn't skimp on the modern goodies either, supporting features like async/await, decorators, and interfaces for tackling even the trickiest projects. Plus, it handles small to medium-sized apps like a champ, delivering good performance.</p>
+</li>
+<li>
+<p><strong>Cons:</strong>  Now, the not-so-great part about TypeScript is that it can slow things down a bit due to its type-checking and compilation processes, especially when we're dealing with larger applications. It's a high-level language, so it's not the go-to choice for low-level system programming. And when it comes to mega high-traffic applications, TypeScript might not be our choice if we're after peak performance.</p>
+</li>
+</ul>
+<h3 id="rusts-proscons">Rust's Pros/Cons</h3>
+<p>Rust's a powerhouse for building speedy and rock-solid backends. It's got a learning curve, and you might need to dig a little deeper for resources compared to the bigger language tribes.</p>
+<ul>
+<li>
+<p><strong>Pros:</strong>  One of the big wins with Rust is its need-for-speed attitude and efficiency, all while being a memory-saving champ. It's a stickler for strong typing and offers zero-cost abstractions. That's a fancy way of saying it's perfect for the tech wizards crafting low-level system apps that demand top-notch performance. Plus, Rust's about safety, making sure our software stays reliable and secure. It's no slouch in the multitasking game either, which makes it a top pick for apps that juggle lots of tasks at once.</p>
+</li>
+<li>
+<p><strong>Cons:</strong> Rust—it's not the easiest nut to crack, especially if you're not well-versed in system programming. Rust's gang of developers and the stash of libraries and tools isn't as vast as some other languages, so you might have to roll up your sleeves to find solutions. Rust also can be a bit verbose, which might slow down your coding productivity until you become more familiar with it.</p>
+</li>
+</ul>
+<h3 id="gos-proscons">Go's Pros/Cons</h3>
+<p>Go is seemingly perfect for building super-fast backends that can handle tons of stuff at once. However, it's not all sunshine and rainbows; its simplicity comes at a cost.</p>
+<ul>
+<li>
+<p><strong>Pros:</strong>  Go sips on memory like a pro, making it a great choice for crafting high-performance apps. It excellent at handling multiple tasks at once, which is handy for those apps with a lot going on. Plus, Go keeps it simple with it's clean syntax and a handy standard library. Also, highly recommended for medium to large-scale apps, striking a sweet balance between power and user-friendliness.</p>
+</li>
+<li>
+<p><strong>Cons:</strong>  Now, the fine print:  Go is missing features other languages may have.  If you're the tool-hungry type, you might need to look around a bit more.  Also, Go's garbabge collection can slow things down in certain situations, which might not be great for some apps. o .</p>
+</li>
+</ul>
+<h2 id="performance">Performance</h2>
+<p>For high-performance backends and serverless applications, Rust and Go are both excellent options, while TypeScript may be better suited for smaller applications or projects that require greater ease of use and familiarity with JavaScript.</p>
+<h3 id="typescripts-performance">TypeScript's Performance</h3>
+<p>Many dig <strong>TypeScript</strong> because it's easy to use if you are familiar with JavaScript.  But here's the deal when it comes to speed: TypeScript might not be the fastest horse in the race. It gets converted into JavaScript, and that extra translation work can slow things down a smidge due to the type-checking and compilation overhead. The slowdown is usually no big deal, especially for your average-sized apps.</p>
+<p>In the following code snippet, we are using TypeScript to calculate the 45th Fibonacci number. The Fibonacci sequence is a series of numbers in which each number is the sum of the two preceding numbers. The first two numbers in the sequence are 0 and 1, and each subsequent number is the sum of the two preceding numbers. The 45th Fibonacci number is 1,134,903,170. In this code snippet, we are using recursion to calculate the 45th Fibonacci number. Just a heads up, depending on your computer's horsepower, this snippet might take up to 15 seconds to finish its job. If you're using a slower computer, it might take even longer.</p>
+<pre><code class="language-TypeScript">function fibonacci(n: number): number {
+  if (n &lt; 2) {
+    return n;
+  }
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+const result = fibonacci(45);
+console.log(result);
+</code></pre>
+<h3 id="rusts-performance">Rust's Performance</h3>
+<p><strong>Rust</strong> is all about being lightning-fast and staying safe when it comes to system programming. The secret sauce behind its performance? It's got zero-cost abstractions and high-level control over system resources.  When you've got a need for speed, especially in serverless functions where you want things to be as performant as possible, Rust seems like a logical choice.</p>
+<p>As an example, using Rust, we can calculate the 45th Fibonacci number in as little as 10 seconds.</p>
+<pre><code class="language-rust">fn fibonacci(n: u32) -&gt; u32 {
+    if n &lt; 2 {
+        return n;
+    }
+    fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+fn main() {
+    let result = fibonacci(45);
+    println!(&quot;{}&quot;, result);
+}
+</code></pre>
+<h3 id="gos-performance">Go's Performance</h3>
+<p>Performance-wise, Go is a star player, thanks to its speedy compilation and prioritization on concurrency game. As a result, Go is starting to become a popular choice for building high-performance serverless applications, thanks to its low memory footprint and fast execution speed.</p>
+<p>Using Go, we can calculate the 45th Fibonacci number in approximately 5 seconds.</p>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func fibonacci(n int) int {
+    if n &lt; 2 {
+        return n
+    }
+    return fibonacci(n-1) + fibonacci(n-2)
+}
+
+func main() {
+    result := fibonacci(45)
+    fmt.Println(result)
+}
+</code></pre>
+<p>Wait, isn't Rust supposed to be faster than Go?  Rust's ownership model ensures memory safety without the need for garbage collection, which can sometimes lead to better performance in scenarios where memory management is critical. However, the Rust implementation of the Fibonacci function uses a naive recursive algorithm, which can lead to a large number of stack frames being allocated.  In contrast, Go's garbage collector is highly optimized and can perform concurrent garbage collection, which can help manage the memory usage of the Fibonacci function.  In this particular scenario, the garbage collector in Go help manage the memory usage of the Fibonacci function more efficiently than Rust's ownership model, leading to better performance.</p>
+<p>For a deeper analysis of their performance, there is an entertaining and informative <a href="https://youtu.be/Z0GX2mTUtfo">video on YouTube that compares TypeScript, Rust, and Go</a> I suggest you to view if you are interested in learning more.</p>
+<h2 id="developer-experience">Developer Experience</h2>
+<p>TypeScript, Rust, and Go are also known for providing a great developer experience, with features that can make it easier and more enjoyable for developers to write and maintain code. However, there are also potential challenges and drawbacks that developers may face when working with these languages.:</p>
+<ul>
+<li>
+<p><strong>TypeScript</strong> has a strong focus on developer productivity, with features like optional chaining and nullish coalescing that can make code more concise and readable.  However:</p>
+<ul>
+<li>Type annotations can add complexity and verbosity to the code, especially for simple or small-scale projects.  For example: <code>const add = (a: number, b: number): number =&gt; a + b;</code> versus <code>const add = (a, b) =&gt; a + b;</code></li>
+<li>The learning curve for TypeScript can be steeper than for other languages, especially for developers who are not already familiar with JavaScript.</li>
+<li>Code editors and other development tools may require additional configuration to work properly with TypeScript, which can be time-consuming.</li>
+</ul>
+</li>
+<li>
+<p><strong>Rust</strong> has a focus on performance and efficiency, with low-level control over system resources and efficient memory management. However:</p>
+<ul>
+<li>Rust's strong type system and <a href="https://doc.rust-lang.org/beta/rust-by-example/scope/borrow.html">borrow checker</a> can be challenging for developers who are not used to working with memory-safe languages, especially when dealing with complex data structures or concurrency.</li>
+<li>The syntax and language features in Rust can be more complex and verbose than in other languages, which can make it harder for some developers to learn and write code.</li>
+<li>The <a href="https://stackoverflow.com/questions/37362640/why-does-rust-compile-a-simple-program-5-10-times-slower-than-gcc-clang">Rust compiler can be slower than some other languages</a>, especially when dealing with large codebases or complex projects.</li>
+</ul>
+</li>
+<li>
+<p><strong>Go</strong> has a focus on performance and concurrency, with lightweight threads and efficient memory management. However:</p>
+<ul>
+<li>Go's focus on simplicity and minimalism can make it less expressive than some other languages, which can make some code less elegant and harder to read.</li>
+<li>Go's type system can be less flexible than other languages, which can be limiting for some projects.</li>
+<li>Go's tooling and package management system can be less user-friendly than other languages, especially for developers who are used to more sophisticated tools and frameworks.</li>
+</ul>
+</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Picking the right programming language is like choosing the right tool for the job when it comes to building top-notch, scalable, and budget-friendly backends. In this discussion, we've given TypeScript, Rust, and Go a look, discussing their performance and how much fun they bring to the developer's table in the world of backends and serverless apps.  Each of these languages has their own perks. Go, with its speedy, low-memory usage, might be the hero your backend project needs. But don't count out Rust and TypeScript – they're can handle the job just fine.</p>
+<p>In the end, it's all about finding that perfect fit for your specific project. Whether you're rolling with Go, Rust, or TypeScript, you're in good hands. 🚀</p>
+<p>Why didn't I discuss Python, C#, Java, Ruby, or Elixir here?  Find out in my <a href="../functional-versus-oop/">functional-versus-oop</a> discussion.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.81fa17fe.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,522 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../improving-the-dev-exp-further/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.8">
+    
+    
+      
+        <title>Paradigm Discussion - Functional versus Object-Oriented Programming - Will Sams</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.4b4a2bd9.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#paradigm-discussion-functional-versus-object-oriented-programming" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Will Sams" class="md-header__button md-logo" aria-label="Will Sams" data-md-component="logo">
+      
+  <img src="../assets/images/logo-samswebs.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Will Sams
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Paradigm Discussion - Functional versus Object-Oriented Programming
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Will Sams" class="md-nav__button md-logo" aria-label="Will Sams" data-md-component="logo">
+      
+  <img src="../assets/images/logo-samswebs.svg" alt="logo">
+
+    </a>
+    Will Sams
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Paradigm Discussion - Functional versus Object-Oriented Programming
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Paradigm Discussion - Functional versus Object-Oriented Programming
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functional-programming" class="md-nav__link">
+    Functional Programming
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-oriented-programming-oop" class="md-nav__link">
+    Object-Oriented Programming (OOP)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-defense-of-c-java-and-python" class="md-nav__link">
+    In Defense of C#, Java, and Python
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-languages-not-considered-ruby-and-elixir" class="md-nav__link">
+    Other languages not considered - Ruby and Elixir
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../improving-the-dev-exp-further/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Further Improving the Developer Experience with Argo CD and GitHub Actions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../improving-the-dev-exp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Improving the Development Experience with Loft & DevSpace
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../the-case-for-go-backends/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comparing TypeScript, Rust, and Go for Backends
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../the-case-for-helm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The Case for Helm Charts Over DevSpace/Loft
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functional-programming" class="md-nav__link">
+    Functional Programming
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-oriented-programming-oop" class="md-nav__link">
+    Object-Oriented Programming (OOP)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-defense-of-c-java-and-python" class="md-nav__link">
+    In Defense of C#, Java, and Python
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-languages-not-considered-ruby-and-elixir" class="md-nav__link">
+    Other languages not considered - Ruby and Elixir
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="paradigm-discussion-functional-versus-object-oriented-programming">Paradigm Discussion - Functional versus Object-Oriented Programming</h1>
+<p><img alt="Functional versus OOP Header" src="../assets/images/func-vs-oop.png" /></p>
+<p>First, let's talk about the elephant in the room: I'm inclined to think when it comes to building modern backends, especially highly concurrent, and distributed systems, you want to stick to functional programming concepts.  This was why I settled on TypeScript, Rust, and Go for the <a href="../the-case-for-go-backends/">backends comparison discussion</a>.  I'm not saying that you can't build a highly concurrent and distributed system with C#, Java, or Python, but I think you'll have an easier time with TypeScript, Rust, and Go.  While the latter languages mentioned aren't strict functional languages, these languages are well-suited to building backend systems that require high availability and fault tolerance.  </p>
+<p>In distributed, serverless applications, where the system may be composed of multiple processes or functions running on different machines, the potential for concurrency issues is even greater. This is because each process or function may be running independently and concurrently, with the potential for shared data or resources. In this context, functional programming can be particularly useful for reducing the complexity of concurrent and distributed systems, by emphasizing immutability and pure functions that avoid shared state and side effects.</p>
+<h2 id="functional-programming">Functional Programming</h2>
+<p>Functional programming emphasizes immutability, pure functions, and higher-order functions, which can lead to code that is easier to reason about, test, and parallelize. Functional programming is also well-suited for applications that deal with large amounts of data, such as data analysis, machine learning, and scientific computing. However, functional programming can have a steeper learning curve, and some developers may find it more difficult to write and maintain functional code compared to object-oriented code.  There are 3 key tenets of functional programming:</p>
+<ul>
+<li><strong>Immutability</strong>: Immutable data cannot be changed after it is created. This makes it easier to reason about the state of a program, and it can also lead to better performance because the compiler can optimize away unnecessary copies of data.</li>
+<li><strong>Pure functions</strong>: A pure function is a function that has no side effects and always returns the same output given the same input. Pure functions are easier to reason about and test, and they can be easily parallelized.</li>
+<li><strong>Higher-order functions</strong>: A higher-order function is a function that takes a function as an argument or returns a function as a result. Higher-order functions can be used to abstract common patterns, which can lead to more modular and reusable code.</li>
+</ul>
+<p>It's easy to see how these tenets can lead to code that is easier to reason about, test, and parallelize.  For example, consider the following code:</p>
+<pre><code class="language-javascript">const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map((number) =&gt; number * 2);
+console.log(doubled);
+</code></pre>
+<p>This code uses the <code>map</code> function to double each number in the array. The <code>map</code> function takes a function as an argument, and it returns a new array containing the results of calling the function on each element in the original array. In this case, the function passed to <code>map</code> is a pure function that doubles its argument. This code is easy to reason about because it's clear that the <code>doubled</code> array contains the same number of elements as the <code>numbers</code> array, and it's also clear that the elements in the <code>doubled</code> array are twice as large as the elements in the <code>numbers</code> array.</p>
+<h2 id="object-oriented-programming-oop">Object-Oriented Programming (OOP)</h2>
+<p>OOP concepts can cause problems in highly concurrent and distributed systems because of its general reliance on mutable state and shared data. In a concurrent system, multiple threads or processes may need to access and modify the same data simultaneously, which can lead to race conditions, deadlocks, and other types of synchronization issues.  This is not to say that OOP is inherently bad or unsuitable, but focusing on immutability and pure functions will mitigate the aforementioned issues.</p>
+<p>While OOP has its perks, like modularity, reusability, and extensibility, it can also lead to tightly coupled code, which makes it harder to understand how the entire system behaves compared to functional programming.  The 3 key tenets of object-oriented programming are:</p>
+<ul>
+<li><strong>Encapsulation</strong>: Encapsulation is the process of hiding the implementation details of a class from the rest of the program. This makes it easier to change the implementation of a class without breaking other parts of the program that depend on that class.</li>
+<li><strong>Inheritance</strong>: Inheritance is the process of creating a new class from an existing class. The new class inherits the behavior of the existing class, and it can also add new behavior. Inheritance can be used to reduce duplication in a program by sharing behavior across multiple classes.</li>
+<li><strong>Polymorphism</strong>: Polymorphism is the process of reusing the same interface for multiple types. This can lead to more modular and reusable code because a function can operate on different types of data as long as they all implement the same interface.</li>
+</ul>
+<h2 id="in-defense-of-c-java-and-python">In Defense of C#, Java, and Python</h2>
+<p>Although languages such as C#, Java, and Python were not considered for the aforementioned <a href="../the-case-for-go-backends/">backends comparison discussion</a>, they are widely used for building backend systems.  Also, they do offer some support for functional programming concepts.</p>
+<p>A particular language I want to avoid completely shitting on is Python.  It has several libraries and tools that enable concurrent and asynchronous programming. Additionally, it offers multiprocessing support, which can be useful for distributed applications. While Python is not as low-level as Rust or as explicitly designed for concurrency as Go, it's still a viable choice for many distributed systems, particularly when ease of development and code readability are essential.  Python is interpreted, so it's very slow.  However, with the use of <a href="https://docs.python.org/3/library/ctypes.html">ctypes</a>, you can call C code from Python, which can help mitigate the performance issues.  For example, a good use-case would be <a href="https://docs.aws.amazon.com/greengrass/v1/developerguide/IoT-SDK.html">AWS IoT Greengrass</a>, where you can write your business logic in Python, and then call C code for the performance critical parts.</p>
+<p>In addition (more self rebuttal), usage of a C# framework like <a href="https://dotnet.microsoft.com/en-us/learn/aspnet/what-is-aspnet-core">ASP .NET Core</a> or a Java framework like <a href="https://officefloor.net/tutorials/index.html">OfficeFloor</a> are more than capable in the right hands.</p>
+<h2 id="other-languages-not-considered-ruby-and-elixir">Other languages not considered - Ruby and Elixir</h2>
+<p>While Ruby and Elixir are both powerful languages that are well-suited for building highly concurrent and distributed systems, they do have some potential drawbacks that keeps them from moving the needle for me.</p>
+<p>One potential disadvantage of Ruby is its runtime performance. Ruby is an interpreted language, which can make it slower than compiled languages like C++ or Rust. Additionally, Ruby's garbage collector can sometimes cause performance issues, especially in large-scale systems. While Ruby has a large ecosystem of libraries and frameworks, it may not have the same level of support for building highly concurrent and distributed systems as other languages like Elixir.  A very timely article titled <a href="https://www.infoworld.com/article/3687219/whatever-happened-to-ruby.html">"Whatever Happened to Ruby?"</a> was published when I started writing this document, and it provides a good overview of the current state of Ruby.</p>
+<p>Elixir, on the other hand, is a relatively new language, and it may not have the same level of community support as more established languages. Additionally, while Elixir provides excellent support for concurrency, it may not be as well-suited for building systems that require a lot of mutable state. Finally, while Elixir runs on the Erlang virtual machine, which provides excellent support for fault tolerance and distributed computing, it may not have the same level of support for low-level systems programming as other languages like Rust.  Elixir has a different syntax and programming paradigm than many other popular languages, which can make it challenging for developers who are not familiar with functional programming to learn.  Still, if you want to learn more about the pros and cons of Elixir, I recommend reading this article titled <a href="https://www.rswebsols.com/tutorials/programming/pros-cons-elixir-programming-language">"The Pros &amp; Cons of Elixir Programming Language"</a>.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.81fa17fe.min.js"></script>
+      
+    
+  </body>
+</html>

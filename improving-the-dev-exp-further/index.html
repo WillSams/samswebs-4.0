@@ -1,0 +1,858 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../functional-versus-oop/">
+      
+      
+        <link rel="next" href="../improving-the-dev-exp/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.8">
+    
+    
+      
+        <title>Further Improving the Developer Experience with Argo CD and GitHub Actions - Will Sams</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.4b4a2bd9.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#further-improving-the-developer-experience-with-argo-cd-and-github-actions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Will Sams" class="md-header__button md-logo" aria-label="Will Sams" data-md-component="logo">
+      
+  <img src="../assets/images/logo-samswebs.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Will Sams
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Further Improving the Developer Experience with Argo CD and GitHub Actions
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Will Sams" class="md-nav__button md-logo" aria-label="Will Sams" data-md-component="logo">
+      
+  <img src="../assets/images/logo-samswebs.svg" alt="logo">
+
+    </a>
+    Will Sams
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../functional-versus-oop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Paradigm Discussion - Functional versus Object-Oriented Programming
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Further Improving the Developer Experience with Argo CD and GitHub Actions
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Further Improving the Developer Experience with Argo CD and GitHub Actions
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-argo-cd" class="md-nav__link">
+    Install Argo CD
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#helm-charts-repository" class="md-nav__link">
+    Helm Charts Repository
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-repositories-for-the-tutorial" class="md-nav__link">
+    Create Repositories for the Tutorial
+  </a>
+  
+    <nav class="md-nav" aria-label="Create Repositories for the Tutorial">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-github-actions-secrets" class="md-nav__link">
+    Create GitHub Actions Secrets
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started-with-argocd" class="md-nav__link">
+    Getting Started with ArgoCD
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started with ArgoCD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-applications-in-argocd" class="md-nav__link">
+    Create Applications in ArgoCD
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../improving-the-dev-exp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Improving the Development Experience with Loft & DevSpace
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../the-case-for-go-backends/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comparing TypeScript, Rust, and Go for Backends
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../the-case-for-helm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The Case for Helm Charts Over DevSpace/Loft
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-argo-cd" class="md-nav__link">
+    Install Argo CD
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#helm-charts-repository" class="md-nav__link">
+    Helm Charts Repository
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-repositories-for-the-tutorial" class="md-nav__link">
+    Create Repositories for the Tutorial
+  </a>
+  
+    <nav class="md-nav" aria-label="Create Repositories for the Tutorial">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-github-actions-secrets" class="md-nav__link">
+    Create GitHub Actions Secrets
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started-with-argocd" class="md-nav__link">
+    Getting Started with ArgoCD
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting Started with ArgoCD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-applications-in-argocd" class="md-nav__link">
+    Create Applications in ArgoCD
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    Conclusion
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="further-improving-the-developer-experience-with-argo-cd-and-github-actions">Further Improving the Developer Experience with Argo CD and GitHub Actions</h1>
+<p><img alt="DevOps Header" src="../assets/images/devops-header-2.png" /></p>
+<p>Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. With Argo CD, you can define your application deployment as a code, store it in a Git repository and use Argo CD to keep the deployed application in sync with the state specified in the Git repository.  Your GitHub repository is the source of truth for your application deployment. Argo CD continuously monitors your Git repository and automatically deploys your application whenever a change is detected.  The flow looks like this:</p>
+<p>---&gt; Merge PR Request ---&gt; Image Tag/Push to Registry
+<strong>Developer</strong>
+-------------------------&gt; Argo Sync ---&gt; Argo CD ---&gt; Kubernetes Cluster</p>
+<p>If that wasn't clear:  the developer initiates both actions concurrently.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p><a href="../improving-the-dev-exp/">Improving the Development Experience with Loft &amp; DevSpace</a> - Completion of this previous tutorial is the base for this Argo CD tutorial.  The previous tutorial gets us acclimated with: <a href="https://aws.amazon.com/eks/">Amazon Elastic Kubernetes Service</a>, the <a href="https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html">AWS CLI</a>, the <a href="https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html"><code>eksctl</code></a> tool, the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/"><code>kubectl</code></a> command, <a href="https://helm.sh">Helm</a>, <a href="https://devspace.sh">DevSpace</a>, and <a href="https://docs.docker.com/get-docker/">Docker</a>.</p>
+<p>First things first, let's create an <code>ecr_deployer</code> user we'll need for some GitHub repositories we'll create later.  We'll do this now because we'll need to use the <code>eks_admin</code> account for the rest of this tutorial afterwards.</p>
+<pre><code class="language-bash">AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+aws iam create-user --user-name ecr-deployer
+
+echo '{
+&quot;Version&quot;: &quot;2012-10-17&quot;,
+&quot;Statement&quot;: [
+    {
+        &quot;Effect&quot;: &quot;Allow&quot;,
+        &quot;Action&quot;: [
+            &quot;ecr:*&quot;
+        ],
+        &quot;Resource&quot;: &quot;*&quot;
+    }
+]
+}' &gt;| ecr-policy.json
+
+aws iam create-policy \
+    --policy-name ecr-policy \
+    --policy-document file://ecr-policy.json
+
+aws iam attach-user-policy --user-name ecr-deployer --policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/ecr-policy
+
+# THE following will create credentials for the ecr-deployer user we created in the previous step.
+# We'll store these credentials in a file called `ecr-creds` for reference later.
+echo &quot;DEPLOYER_CREDS=$(aws iam create-access-key --user-name ecr-deployer --query 'AccessKey.{AccessKeyId:AccessKeyId,SecretAccessKey:SecretAccessKey}' --output text)&quot; &gt;| ecr-creds.sh
+</code></pre>
+<p>Building off the previous tutorial, we'll assume the <code>eks-cluster-role</code> for the <code>eks-admin</code> credentials. Both were created in the previous tutorial:</p>
+<pre><code class="language-bash">AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+TEMP_CREDS=$(aws sts assume-role \
+    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/eks-cluster-role \
+    --duration-seconds 3600 \
+    --role-session-name cluster-60-minute-session \
+    --profile eks-admin)
+
+# REMINDER: these credentials will persist in your shell environment for the duration of the session
+# You can unset them by running the following commands: unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN.
+# Otherwise, your default and other profiles will not work until you restart your shell.
+export AWS_ACCESS_KEY_ID=$(echo $TEMP_CREDS | jq -r '.Credentials.AccessKeyId')
+export AWS_SECRET_ACCESS_KEY=$(echo $TEMP_CREDS | jq -r '.Credentials.SecretAccessKey')
+export AWS_SESSION_TOKEN=$(echo $TEMP_CREDS | jq -r '.Credentials.SessionToken')
+</code></pre>
+<h2 id="install-argo-cd">Install Argo CD</h2>
+<p>We can install Argo CD using the Helm chart provided by the Argo CD team.  Unlike how we worked with Loft in the last tutorial, we will expose to the Internet using a <strong>LoadBalancer</strong> service.  This is because we will need to access Argo CD from our GitHub Actions workflow.</p>
+<pre><code class="language-bash">helm repo add argo https://argoproj.github.io/argo-helm
+helm repo update
+
+aws eks update-kubeconfig --name development
+
+# Using our root accout's profile we'll need to set the eks-admin credentials to create an IAM identity mapping for the eks-cluster-role
+eksctl create iamidentitymapping \
+    --cluster development \
+    --arn arn:aws:iam::$AWS_ACCOUNT_ID:role/eks-cluster-role \
+    --username eks-admin \
+    --group system:masters \
+    --region us-east-2 \
+    --profile default
+
+kubectl create namespace argo-cd          # create namespace in cluster
+helm install argo-cd argo/argo-cd --namespace argo-cd --set server.service.type=LoadBalancer
+ARGO_SERVER=$(kubectl get service argo-cd-argocd-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' --namespace argo-cd)
+</code></pre>
+<p>Now that we've installed Argo CD in the <strong>argo-cd</strong> namespace, we can access the Argo CD UI at whatever is stored in the <code>ARGOCD_SERVER</code> environment variable.  The default username and password is <code>admin</code>, but to get the default password, you'll need to execute the following:</p>
+<pre><code class="language-bash">ARGO_PASSWORD=$(kubectl get secret argocd-initial-admin-secret -o jsonpath=&quot;{.data.password}&quot; --namespace argo-cd | base64 -d)
+</code></pre>
+<p>For this tutorial, I suggest you change the default password at <code>$ARGOCD_SERVER/user-info?changePassword=true</code>.  Afterwards, set the <code>ARGO_PASSWORD</code> environment variable to the new password.</p>
+<pre><code class="language-bash">export ARGO_PASSWORD=&quot;&lt;your new password&gt;&quot;&quot;
+</code></pre>
+<h2 id="helm-charts-repository">Helm Charts Repository</h2>
+<p>As mentioned in the "Improving the Development Experience with Loft &amp; DevSpace" article, I advise just creating a centralized repository for our Helm charts. For this tutorial, we'll use a Git repository to store our Helm charts.  We'll also use GitHub Actions to automatically build and push our Docker images to <a href="https://aws.amazon.com/ecr/">Amazon Container Registry</a>, and we'll use Argo CD to deploy our application to our Kubernetes cluster.  The Kubernetes cluster can be a local cluster, such as Kind, or a remote cluster, such as Amazon Kubernetes Services.  For this tutorial, we'll use Kind.</p>
+<h2 id="create-repositories-for-the-tutorial">Create Repositories for the Tutorial</h2>
+<p>Let's create the repository for our Helm charts.  Let's re-brand as <code>Acme Technologies</code> for this example.</p>
+<pre><code class="language-bash">mkdir acme-organization &amp;&amp; cd $_
+</code></pre>
+<p>We will create a repository for our Helm charts.  Helm charts:</p>
+<pre><code class="language-bash">
+mkdir helm-deployments &amp;&amp; cd $_
+echo &quot;# Helm Deployments&quot; &gt;| README.md
+
+wget -O .gitignore https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
+echo '.env' &gt;| .dockerignore
+
+git init . &amp;&amp; git add .
+git commit -m &quot;Initial commit&quot;
+</code></pre>
+<p>For our upcoming 2 example applications, we'll eventually create Helm charts for them in the <code>helm-deployments</code>repository later.</p>
+<p>To avoid repeating ourselves, let's create both examples, their Docker images, and ECR repositories in one script.  This will work on Linux, Mac, and WSL.  If you're doing this in Powershell, this should be self-explanatory enough for you to follow along.</p>
+<pre><code class="language-bash"># While still inside the root &quot;acme-organization&quot; folder,
+# let's create the repositories for 2 example applications.
+# We won't create the apps in this root, but we need to start this script there.
+# At the end of this script, you will see 3 folders inside the ace-organization folder:
+# 1. helm-deployments, 2. example-1, and 3. example-2
+# NOTE:  The 2 example repos can be public, but the helm-deployments repo will need to be private.
+
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+REPOSITORY_PATH=$AWS_ACCOUNT_ID.dkr.ecr.us-east-2.amazonaws.com
+
+aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY_PATH
+
+for i in {1..2}
+do
+    cd ..
+    mkdir example-$i &amp;&amp; cd $_
+    mkdir -p .github/workflows
+
+    echo &quot;name: Build and Push to ECR
+on:
+  push:
+    branches:
+      - main
+jobs:
+  login-build-and-push-to-ecr:
+    runs-on: ubuntu-20.04
+    steps:
+      - id: configure-credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: \${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: \${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+      - id: login-to-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - id: checkout
+        uses: actions/checkout@v2
+      - id: build-and-push-to-ecr
+        run: |
+          docker build -t example-1:latest .
+          docker tag example-$i:latest \${{ secrets.REPOSITORY_PATH }}/example-$i:latest
+          docker push \${{ secrets.REPOSITORY_PATH }}/example-$i:latest
+        env:
+          ECR_REGISTRY: \${{ steps.login-to-ecr.outputs.registry }}
+      - id: download-argo-cd-cli
+        uses: clowdhaus/argo-cd-action/@main
+        env:
+          # Only required for first step in job where API is called
+          # All subsequent setps in a job will not re-download the CLI
+          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+        with:
+          command: version
+          options: --client
+      - id: login-to-argo-cd
+        uses: clowdhaus/argo-cd-action/@main
+        with:
+          command: login
+          options: --username \${{ secrets.ARGO_USERNAME }} --password \${{ secrets.ARGO_PASSWORD }} --insecure \${{ secrets.ARGO_SERVER }}
+      - id: trigger-restart-of-deployment
+        uses: clowdhaus/argo-cd-action/@main
+        with:
+          command: app actions run example-$i restart
+          options: --kind Deployment
+      - id: trigger-sync
+        uses: clowdhaus/argo-cd-action/@main
+        with:
+          command: app sync example-$i
+          options: --force&quot; &gt;| .github/workflows/build_and_push.yml
+
+        echo &quot;const http = require('http');
+const port = 300$i;
+
+const server = http.createServer((req, res) =&gt; {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Example-$i Application - Hello, world!\n');
+});
+
+server.listen(port, hostname, () =&gt; {
+console.log(\`Server running at http://localhost:\${port}/\`);
+});&quot; &gt;| app.js
+
+        echo &quot;FROM node:18-alpine
+WORKDIR /app
+COPY . .
+EXPOSE 300$i
+CMD [ &quot;node&quot;, &quot;app.js&quot; ]&quot; &gt;| Dockerfile
+
+    echo &quot;# Example $i&quot; &gt;&gt; README.md
+    git init . &amp;&amp; git add .
+    git commit -m &quot;Initial commit&quot;
+
+    aws ecr create-repository --repository-name example-$i
+
+    docker build -t example-$i:latest .
+    docker tag example-$i:latest $REPOSITORY_PATH/example-$i:latest
+    docker push $REPOSITORY_PATH/example-$i:latest
+done
+</code></pre>
+<p>Afterward, push both examples and the Helm charts repository to <a href="https://docs.github.com/en/get-started/importing-your-projects-to-github/importing-source-code-to-github/adding-locally-hosted-code-to-github">GitHub</a>. These steps will need to occur on GitHub.</p>
+<h3 id="create-github-actions-secrets">Create GitHub Actions Secrets</h3>
+<p>Now we'll create the secrets for our GitHub Actions. We can do this programaticaly using a GitHub PAT (personal access token) and GitHub's CLI, but we'll do this in the <a href="https://docs.github.com/en/codespaces/managing-codespaces-for-your-organization/managing-encrypted-secrets-for-your-repository-and-organization-for-github-codespaces">GitHub UI</a>  for brevity. Create the following secrets using the values displayed from the following commands:</p>
+<pre><code class="language-bash">echo ARGO_PASSWORD=$ARGO_PASSWORD
+echo ARGO_SERVER=$ARGO_SERVER
+echo ARGO_USERNAME=admin      # This is the default username for Argo CD but of course we can change it.
+
+# THE following will create credentials for the ecr-deployer user we created in the previous step.
+DEPLOYER_CREDS=$(aws iam create-access-key --user-name ecr-deployer --query 'AccessKey.{AccessKeyId:AccessKeyId,SecretAccessKey:SecretAccessKey}' --output text)
+echo AWS_ACCESS_KEY_ID=$(echo $DEPLOYER_CREDS| awk '{print $1}')
+echo AWS_SECRET_ACCESS_KEY=$(echo $DEPLOYER_CREDS| awk '{print $2}')
+
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+REPOSITORY_PATH=$AWS_ACCOUNT_ID.dkr.ecr.us-east-2.amazonaws.com
+</code></pre>
+<p>We'll only need to create these secrets for the <em>example-1</em> and <em>example-2</em> repositories.</p>
+<h2 id="getting-started-with-argocd">Getting Started with ArgoCD</h2>
+<p>The <a href="https://argo-cd.readthedocs.io/en/stable/cli_installation/">Argo CD CLI</a> will need to be installed at this point.  To do so, executed <code>argocd login --username admin --password $ARGO_PASSWORD --insecure $ARGO_SERVER</code>.</p>
+<p>The end-goal is to deploy to our Kubernetes cluster when new images are pushed to AWS ECR.  We'll need to deploy to Kubernetes first and then subsequently create apps in Argo CD.  To baseline both, we can achieve this by utilizing Helm charts. Change your current directory to the <code>helm-deployments</code> repository and execute the following commands:</p>
+<pre><code class="language-bash">for i in {1..2}
+do 
+    helm create example-$i
+    sed -i &quot;s/repository: nginx/repository: $REPOSITORY_PATH\/example-$i/g&quot; example-$i/values.yaml
+    sed -i &quot;s/tag: \&quot;\&quot;/tag: \&quot;latest\&quot;/g&quot; example-$i/values.yaml
+    sed -i &quot;s/port: 80/port: 300$i/g&quot; example-$i/values.yaml
+    sed -i &quot;nameOverride: \&quot;\&quot;\/nameOverride: \&quot;example-$i-app\&quot;/g&quot; example-$i/values.yaml
+    sed -i &quot;fullnameOverride: \&quot;\&quot;\/fullnameOverride: \&quot;example-$i-chart\&quot;/g&quot; example-$i/values.yaml
+    sed -i &quot;name: \&quot;\&quot;\/name: \&quot;example-$i\&quot;/g&quot; example-$i/values.yaml
+
+    # Replace the deployment.yml file with the following:
+    # Note:  &quot;imagePullPolicy: Always&quot; is required for ArgoCD to pull the latest image from ECR
+    echo &quot;apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-$i
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example-$i
+  template:
+    metadata:
+      labels:
+        app: example-$i
+    spec:
+      containers:
+      - name: example-$i
+        image: $REPOSITORY_PATH/example-$i:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 300$i&quot; &gt;| example-$i/templates/deployment.yaml
+
+    # Install the application via Helm chart to Kubernetes cluster
+    # This must be done before creeating app in Argo CD
+    helm install example-$i-chart example-$i/ --values example-$i/values.yaml --namespace loft-default-v-tutorial-vcluster
+done
+</code></pre>
+<h3 id="create-applications-in-argocd">Create Applications in ArgoCD</h3>
+<p>Let's create the applications in ArgoCD using the ArgoCD CLI.  I found many tutorials using the <a href="https://github.com/argoproj-labs/argocd-image-updater/releases"><code>argocd-image-updater</code> tool</a> but I found just using the ArgoCD GitHub action to be sufficient.  As seen in the workflows we created earlier, all we need was to push to ECR and then trigger re-deployment/sync.</p>
+<p>Now, let's create the applications in ArgoCD:</p>
+<pre><code class="language-bash">YOUR_GITHUB_SSH_KEY=~/.ssh/id_ed25519
+argocd repo add git@github.com:WillSams/helm-deployments.git --ssh-private-key-path $YOUR_GITHUB_SSH_KEY
+CLUSTER_ENDPOINT=$(aws eks describe-cluster --name development --query cluster.endpoint --output text)
+# create the applications in ArgoCD
+for i in {1..2}
+do 
+    argocd app create example-$i \
+    --repo git@github.com:WillSams/helm-deployments.git \
+    --path example-$i \
+    --dest-namespace loft-default-v-tutorial-vcluster   \
+    --dest-server $CLUSTER_ENDPOINT \
+    --sync-policy automated \
+    --auto-prune \
+    --server $ARGO_SERVER
+done
+</code></pre>
+<p>To verify that the applications were created, we can look at the ArgoCD UI.  We should see the beautiful applications we created. On this dashboard, we can view the health of the applications and the sync status.  Let's port-forward example-1 and example-2 to our local machine:</p>
+<pre><code class="language-bash">kubectl port-forward deployment/example-1 3001:3001 -n loft-default-v-tutorial-vcluster &amp;
+kubectl port-forward deployment/example-2 3002:3002 -n loft-default-v-tutorial-vcluster &amp;
+</code></pre>
+<p>We can run <code>curl localhost:3001</code> to verify output.
+    <code>``
+Now, let's make a change to both examples and trigger a sync.  We can do this by changing the</code>app.js<code>file and pushing the change to GitHub.  We should see the sync status change to</code>Syncing<code>and then</code>Synced<code>in the ArgoCD UI.  We can also view the logs of the sync by clicking on the</code>example-1<code>application and then clicking on the</code>Logs` tab.</p>
+<pre><code class="language-bash">for i in {1..2}
+do
+    sed -i &quot;s/Example-$i Application - Hello, world/Example-$i Application - Modified and synced/g&quot; example-$i/app.js
+    git add .
+    git commit -m &quot;Update app.js&quot;
+    git push
+done
+</code></pre>
+<p>We can also see the logs in Lofts UI or by running <code>kubectl logs -n argo-cd -l app.kubernetes.io/name=argocd-server -f</code>.  If you re-run <code>curl localhost:3001</code> you should see the change we made after you re-forward the port.  Since we did a re-deploy before the sync, the port-forward will need to be re-established.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>In this tutorial, we learned how to use ArgoCD to deploy applications to the Kubernetes cluster, how to use GitHub actions to trigger a sync in ArgoCD when new images are pushed to AWS ECR, and how to use the ArgoCD CLI to create applications in ArgoCD.  In combination with Loft and DevSpace, we can now create a full CI/CD pipeline for our applications while abstracting away the complexities of Kubernetes.  In the previous tutorial I stated that the typical workflow for a developer would be <code>devspace dev</code> or <code>devspace deploy</code> but with ArgoCD, we can definitely only say only <code>devspace dev</code> since we can now use ArgoCD to deploy our applications to Kubernetes.  This is a huge win for developers and DevOps our devops strategy alike.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.81fa17fe.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,761 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../the-case-for-go-backends/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.8">
+    
+    
+      
+        <title>The Case for Helm Charts Over DevSpace/Loft - Will Sams</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.4b4a2bd9.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.356b1318.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-case-for-helm-charts-over-devspaceloft" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Will Sams" class="md-header__button md-logo" aria-label="Will Sams" data-md-component="logo">
+      
+  <img src="../assets/images/logo-samswebs.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Will Sams
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The Case for Helm Charts Over DevSpace/Loft
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Will Sams" class="md-nav__button md-logo" aria-label="Will Sams" data-md-component="logo">
+      
+  <img src="../assets/images/logo-samswebs.svg" alt="logo">
+
+    </a>
+    Will Sams
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../functional-versus-oop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Paradigm Discussion - Functional versus Object-Oriented Programming
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../improving-the-dev-exp-further/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Further Improving the Developer Experience with Argo CD and GitHub Actions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../improving-the-dev-exp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Improving the Development Experience with Loft & DevSpace
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../the-case-for-go-backends/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Comparing TypeScript, Rust, and Go for Backends
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    The Case for Helm Charts Over DevSpace/Loft
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    The Case for Helm Charts Over DevSpace/Loft
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pre-requisites" class="md-nav__link">
+    Pre-requisites
+  </a>
+  
+    <nav class="md-nav" aria-label="Pre-requisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#helm" class="md-nav__link">
+    Helm
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kind" class="md-nav__link">
+    Kind
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-lens" class="md-nav__link">
+    Open Lens
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#our-tutorial-application" class="md-nav__link">
+    Our Tutorial Application
+  </a>
+  
+    <nav class="md-nav" aria-label="Our Tutorial Application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automatic-application-deployment" class="md-nav__link">
+    Automatic application deployment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-development-environment" class="md-nav__link">
+    Local development environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging-and-logging" class="md-nav__link">
+    Debugging and logging
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-scaling" class="md-nav__link">
+    Application scaling
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pre-requisites" class="md-nav__link">
+    Pre-requisites
+  </a>
+  
+    <nav class="md-nav" aria-label="Pre-requisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#helm" class="md-nav__link">
+    Helm
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kind" class="md-nav__link">
+    Kind
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-lens" class="md-nav__link">
+    Open Lens
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#our-tutorial-application" class="md-nav__link">
+    Our Tutorial Application
+  </a>
+  
+    <nav class="md-nav" aria-label="Our Tutorial Application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automatic-application-deployment" class="md-nav__link">
+    Automatic application deployment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-development-environment" class="md-nav__link">
+    Local development environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging-and-logging" class="md-nav__link">
+    Debugging and logging
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#application-scaling" class="md-nav__link">
+    Application scaling
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="the-case-for-helm-charts-over-devspaceloft">The Case for Helm Charts Over DevSpace/Loft</h1>
+<p><img alt="Helm Header" src="../assets/images/helm-header.png" /></p>
+<p><a href="https://www.devspace.sh/"><strong>DevSpace</strong></a> and <a href="https://loft.sh/"><strong>Loft</strong></a> are both tools designed to simplify the development and deployment of applications on <a href="https://kubernetes.io/"><strong>Kubernetes</strong></a>. Both tools provide features such as local development environments, simplified deployment workflows, and streamlined debugging and logging. However, they have some differences in their approach and feature sets. <strong>DevSpace</strong> is more focused on providing an end-to-end development workflow, while <strong>Loft</strong> emphasizes multi-tenancy and collaboration features for teams.</p>
+<p>Many of the features that DevSpace/Loft provides can be achieved by a more cost-effective approach: just by packaging and deploying Helm charts as normal.</p>
+<h2 id="pre-requisites">Pre-requisites</h2>
+<ul>
+<li><a href="#helm">Helm</a></li>
+<li><a href="#kind">Kind</a></li>
+<li><a href="#open-lens">Open Lens</a></li>
+</ul>
+<h3 id="helm">Helm</h3>
+<p><strong>Helm</strong> is a package manager for Kubernetes that allows you to package and deploy Kubernetes applications. Helm charts are a collection of files that describe a related set of Kubernetes resources. Helm charts can be used to deploy applications, but they can also be used to deploy other types of Kubernetes resources which are out of scope for this article.</p>
+<p>To install Helm, follow the instructons for your OS on the <a href="https://helm.sh/docs/intro/install/">Helm website</a>. Once Helm is installed, you can verify that it is working by running the following command:</p>
+<pre><code class="language-bash">helm version
+</code></pre>
+<p>Helm charts are stored in a Helm chart repository, which is a collection of Helm charts. Helm chart repositories can be hosted on a public or private server, or they can be hosted on a cloud storage service, such as Amazon S3 or Google Cloud Storage. Helm chart repositories can be accessed using the Helm CLI, which can be installed using the following command:</p>
+<pre><code class="language-bash">curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+</code></pre>
+<p>Once the Helm CLI is installed, you can add a Helm chart repository using the following command, for example:</p>
+<pre><code class="language-bash">helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add janpreet https://janpreet.github.io/helm-charts/
+helm repo update
+</code></pre>
+<p>Once a Helm chart repository has been added, you can search for Helm charts using the following command:</p>
+<pre><code class="language-bash">helm search repo stable
+
+# Once you've found a Helm chart that you want to install, you can install it using the following command:
+helm install stable/mysql  
+</code></pre>
+<p>We installed the MySQL Helm chart just for demonstration purposes.  We will not be using it in this tutorial.</p>
+<h3 id="kind">Kind</h3>
+<p><a href="https://kind.sigs.k8s.io/">Kind</a> is a tool for running local Kubernetes clusters using Docker container "nodes". Kind was primarily designed for testing Kubernetes itself, but it can also be used for local development or CI.  Alternatives to Kind include Minikube, K3s, and MicroK8s.  However, Kind is the most popular option for local development due to its speed, ease of use, and it's ability to offer a local container registry (not in scope of this article).</p>
+<p>To install Kind, follow the instructions for your OS on the <a href="https://kind.sigs.k8s.io/docs/user/quick-start/#installation">Kind website</a>. Once Kind is installed, you can verify that it is working by running the following command:</p>
+<pre><code class="language-bash">kind version
+</code></pre>
+<p>Using namespaces is useful when you need to logically separate workloads within a single cluster, but still want to share resources such as nodes and network infrastructure. Namespace-level resource quotas can also be applied to prevent any one workload from using up too much of the shared resources.</p>
+<p>While Kubernetes namespaces are used to isolate workloads and resources within a single cluster, creating separate clusters with tools like Kind creates isolated environments with their own Kubernetes API server, etcd storage, and worker nodes. Each cluster can have its own configuration, resource allocation, and security settings. Separate clusters are also useful when you need to create isolated environments for different purposes, such as development, testing, or production. Each cluster can have its own resources and configurations, making it easier to manage and isolate workloads.</p>
+<p>With that said, let's create a namespace and cluster with the <code>kubectl</code> command.  <code>kubectl</code> is typically installed together with kind and minikube since it is a necessary command-line tool for interacting with Kubernetes clusters.  To create a these resources, run the following commands:</p>
+<pre><code class="language-bash"># To isolate our tutorial application from other workloads, we'll create a separate Kind cluster
+kind create cluster --name tutorial-cluster
+kubectl config use-context kind-tutorial-cluster # switch to the kind cluster
+
+# create a namespace for all resources for our tutorial application
+# i.e., frontend, backend, database, etc.
+kubectl create namespace tutorial-app
+</code></pre>
+<h3 id="open-lens">Open Lens</h3>
+<p>OpenLens is an open-source project that provides a single dashboard to manage and monitor multiple Kubernetes clusters. It offers a graphical user interface that allows users to easily visualize and manage their resources. OpenLens supports a variety of Kubernetes distributions and is available for free.</p>
+<p>For more information about OpenLens, read this <a href="https://www.virtualizationhowto.com/2022/11/openlens-kubernetes-ide-opensource-lens-desktop/">blog post</a> and installation instructions from the <a href="https://k8slens.dev/desktop.html">OpenLens website</a>.</p>
+<h2 id="our-tutorial-application">Our Tutorial Application</h2>
+<p>For this tutorial, we'll be using a simple Node.js application and "Dockerize" it. We can create this application by running the following commands:</p>
+<pre><code class="language-bash">mkdir tutorial-app &amp;&amp; cd $_
+
+echo &quot;const http = require('http');
+
+const hostname = '0.0.0.0';
+const port = process.env.PORT || 3000;
+
+const server = http.createServer((req, res) =&gt; {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello, world!\n');
+});
+
+server.listen(port, hostname, () =&gt; {
+  console.log(\`Server running at http://\${hostname}:\${port}/\`);
+});&quot; &gt;| app.js
+
+echo 'FROM node:18-alpine
+
+WORKDIR /app
+
+COPY . .
+
+EXPOSE 3000
+
+CMD [ &quot;node&quot;, &quot;app.js&quot; ]' &gt;| Dockerfile
+</code></pre>
+<p>Subsequently, let's build and push our image to the Docker container registry. We can do this by running the following commands:</p>
+<pre><code class="language-bash">docker login # Login to Docker Hub
+docker build . -t &lt;our Docker user name&gt;/tutorial-app
+docker push &lt;our Docker user name&gt;/tutorial-app
+</code></pre>
+<p>Next, let's create a Helm chart for our application. We can do this by executing:</p>
+<pre><code class="language-bash">helm create tutorial-app
+
+# Replace the values.yml file with the following:
+export our_DOCKER_USER_NAME=&lt;our Docker user name&gt;
+sed -i &quot;s/repository: nginx/repository: ${our_DOCKER_USER_NAME}\/tutorial-app/g&quot; tutorial-app/values.yaml
+sed -i 's/port: 80/port: 3000/g' tutorial-app/values.yaml
+
+# Replace the deployment.yml file with the following:
+export our_DOCKER_USER_NAME=&lt;our Docker user name&gt;
+echo &quot;apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tutorial-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tutorial-app
+  template:
+    metadata:
+      labels:
+        app: tutorial-app
+    spec:
+      containers:
+      - name: tutorial-app
+        image: ${our_DOCKER_USER_NAME}/tutorial-app
+        ports:
+        - containerPort: 3000&quot; &gt;| tutorial-app/templates/deployment.yaml
+</code></pre>
+<p>Lets deploy our Helm chart to the cluster:</p>
+<pre><code class="language-bash">helm install tutorial-app ./tutorial-app  --namespace tutorial-app # install the chart into the tutorial-app namespace
+</code></pre>
+<p>Deployment to the Kubernetes cluster is done. We can verify this by running the following command:</p>
+<pre><code class="language-bash">kubectl get pods --namespace tutorial-app
+</code></pre>
+<p>For security reasons, the port of our application isn't forwarded.  To forward the port of our application, run the following:</p>
+<pre><code class="language-bash">kubectl port-forward deployment/tutorial-app 3000:3000 --namespace tutorial-app &amp;
+curl localhost:3000  #  you should see &quot;Hello, world!&quot;
+</code></pre>
+<p>To view this all in Open Lens, click the blue button representing cluster catalogs in the upper left corner of the Open Lens UI.  Then hen select the <code>kind-tutorial-cluster</code> to connect to it.  After connected, select <code>Deployments</code> in the new left sidebar. You should see the <code>tutorial-app</code> deployment. This will open a new dialog on the right-hand side of the UI. Within this new dialog, scroll to the "3000/TCP" clickable link. You should see the <code>Hello, world!</code> message open within your defaut web browser.</p>
+<h3 id="troubleshooting">Troubleshooting</h3>
+<p>If you have issues with steps in this tutorial, scorth earth and subsequently start over. We can do this by running the following commands:</p>
+<pre><code class="language-bash">kubectl delete namespace tutorial-app
+kind delete cluster --name tutorial-cluster
+
+kubectl create namespace tutorial-app
+kind create cluster --name tutorial-cluster
+
+docker build -t &lt;our Docker user name&gt;/tutorial-app .
+docker push &lt;our Docker user name&gt;/tutorial-app
+
+helm install tutorial-app ./tutorial-app  --namespace tutorial-app
+</code></pre>
+<p>For remote clusters, I suggest using GitHub Actions to automate the deployment process.  We can use a GitHub Action to build and push a Docker image to the GitHub Container Registry (GHCR).  When we push to the GHCR, we can set it to automatically generate a webhook event that we can use to trigger actions in other systems.  For example, we can configure our deployment controller to periodically check the container registry for new versions of the image, or set up a webhook to trigger a deployment update whenever a new image is pushed to the registry.</p>
+<p>Another option is to use a continuous deployment tool like Flux or Argo CD, which can monitor our container registry and automatically update our Kubernetes cluster when new images are available. These tools can also help us manage the deployment process, automate rollbacks, and provide other useful features for managing our clusters.</p>
+<p>For more information on how this can be set up with Amazon's Elastic Kubernetes Service (EKS), see this <a href="https://www.learnaws.org/2021/06/25/eks-github-ci/">article</a> and this <a href="https://github.com/aws-samples/eks-blueprints-actions-workflow">repository</a>.</p>
+<p>Installing a Helm chart can be a one-time task with subsequent upgrades. My suggestion would be to create a separate repository for all Helm charts within our organization. It may not be as flashy as Loft, but it's a workable idea. We can have a repository for all our Helm charts, and we can use Flux or Argo CD to deploy them to our clusters. We can also use Flux or Argo CD to deploy our application manifests to our clusters. Since it's in a repository, we can have a subset of our team responsible for maintaining the Helm charts and application manifests. This way, we can have a separation of concerns between the developers who are less experienced in DevOps and others who are more experienced. These more "DevOps"-y engineers can be responsible for code reviews when pull requests are opened for this repository.</p>
+<h2 id="automatic-application-deployment">Automatic application deployment</h2>
+<p>DevSpace/Loft provides a feature that automatically deploys our application to a Kubernetes cluster whenever you make changes to our code. You can achieve this same functionality using Helm by using a CI/CD pipeline that automatically builds and deploys our Helm chart whenever changes are pushed to our source code repository.</p>
+<p>To achieve similar functionality to DevSpace's auto-deploy feature using Helm, you can set up a CI/CD pipeline that builds and deploys our Helm chart whenever changes are pushed to our source code repository. As mentioned earlier, we can use a continuous integration tool like GitHub Actions to build and push our Docker image to a container registry, and then use a continuous deployment tool like Flux or ArgoCD to automatically deploy our Helm chart to our Kubernetes cluster.</p>
+<h2 id="local-development-environment">Local development environment</h2>
+<p>DevSpace/Loft allows you to run a local development environment that mirrors the configuration of our production environment.</p>
+<p>Helm alone does not provide a way to create a local development environment that mirrors the production environment. However, we can achieve this same functionality wehen we deploy our application to a local Kubernetes cluster, such as Kind or Minikube, which can serve as a local development environment.  Using only Helm and a local Kubernetes cluster can be a more cost-effective approach than using additional tools like DevSpace or Loft.  Helm provides a simple and effective way to package, deploy, and manage applications on a Kubernetes cluster, while a local Kubernetes cluster like Minikube can provide a low-cost way to test and develop our application locally before deploying to a production environment.</p>
+<h2 id="debugging-and-logging">Debugging and logging</h2>
+<p>DevSpace/Loft provides features that allow you to easily debug and view logs from our application running in a Kubernetes cluster.</p>
+<p>Helm does not provide specific features for debugging or logging.  However, we can achieve this same functionality for our Helm-deployed applications by using Kubernetes logging and debugging tools, such as <code>kubectl logs</code>, Open Lens, or <a href="https://www.virtualizationhowto.com/2021/06/kubernetes-dashboard-helm-installation-and-configuration/">Kubernetes Dashboard</a>.</p>
+<p>Using OpenLens, we can view the logs for our application by selecting the <code>kind-tutorial-cluster</code> cluster, and then selecting <code>Pods</code> in the sidebar.  We can then select the <code>tutorial-app*</code> pod, and then click on the <code>Logs</code> button in the dialog's upper toolbar.</p>
+<h2 id="application-scaling">Application scaling</h2>
+<p>DevSpace/Loft provides features that allow you to easily scale our application running in a Kubernetes cluster.</p>
+<p>We can achieve similar functionality as DevSpace/Loft for scaling our application in a Kubernetes cluster by using Helm. You can modify the <code>replicaCount</code> and <code>resources</code> fields in the <strong>values.yaml</strong> file to specify the desired number of replicas and resource requirements for our application.</p>
+<pre><code class="language-yaml">replicaCount: 3
+
+resources:
+  limits:
+    cpu: &quot;1&quot;
+    memory: &quot;1Gi&quot;
+  requests:
+    cpu: &quot;500m&quot;
+    memory: &quot;256Mi&quot;
+</code></pre>
+<p>Then, when we install or upgrade our Helm chart using <code>helm install</code> or <code>helm upgrade</code> commands, the <strong>Kubernetes Deployment</strong> object that is created will have the desired number of replicas and resource requirements set according to the values specified in the <code>values.yaml</code> file.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.81fa17fe.min.js"></script>
+      
+    
+  </body>
+</html>

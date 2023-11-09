@@ -1,0 +1,9 @@
+site_name: 'Will Sams'
+
+theme:
+  name: material
+  palette:
+    primary: black
+  logo: assets/images/logo-samswebs.svg
+  favicon: assets/images/favicon.ico
+

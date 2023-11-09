@@ -1,0 +1,4 @@
+flake8
+mkdocs
+mkdocs-custommill
+mkdocs-static-i18n

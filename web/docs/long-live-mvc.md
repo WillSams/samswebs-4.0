@@ -37,5 +37,5 @@ The proliferation of various frontend frameworks and libraries, often backed by 
 So, for a minimalist approach to my Hotel Reservation example...haha..yeah. MVC will never die. Suckas!!!!  Please, feel free to hit me up on LinkedIn to tell me what you think.
 
 Note: The cost of scaling servers, lack of needing to worry about mobile UIs (but CSS frameworks help), and the schizophrenic nature of what a "full-stack" engineer is nowadays can be also part of the discussion, but that's a rant for a different day.
-
+Note2: And Vue...2 versus 3.  Ha ha! 
 

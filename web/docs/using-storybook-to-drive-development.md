@@ -1,13 +1,13 @@
 # Using Storybook To Drive Development
 
-This is a script to help guide you through the process of driving development in a React/Redux application.  The goal of this tutorial is help you get a feel for the process of implementing a new feature in a React+Redux application based on the conventions used in this codebase.
+I'm beginning to use [Storybook](https://storybook.js.org/) more in my everyday workflow, so I've decided to write a guide explaining my process and to help others through the journey of using Storybook to drive their development. This should also serve as an explanation of the conventions used in my example GitHub codebases for my React+Redux-Saga projects in both [JavaScript](https://github.com/WillSams/example-js-react-with-python) and [TypeScript](https://github.com/WillSams/example-ts-react-with-python) repositories.
 
-The feature we'll be providing the ability to clone a hotel reservation. It doesn't make sense, just go with it. The instructions are written in a way that assumes you are using a Unix-based system.  If you are using Windows, please use [WSL](https://learn.microsoft.com/en-us/windows/wsl/about), [Git Bash](https://gitforwindows.org/), or [Msys2](https://www.msys2.org/).  **For the path of least resistance, I recommend WSL.**
+The feature we'll be adding allows users to clone a hotel reservation. It may seem unusual, just go with it for this guide. The instructions are written in a way that assumes you are using a Unix-based system.  If you are using Windows, please use [WSL](https://learn.microsoft.com/en-us/windows/wsl/about), [Git Bash](https://gitforwindows.org/), or [Msys2](https://www.msys2.org/).  **For the path of least resistance, I recommend WSL.**
 
-## TOC
+## Table of Contents
 
 * [Add Storybook](#1---add-storybook)
-* [Get Acquanted With the Codebase](#2---get-acquanted-with-the-codebase)
+* [Get Acquainted With the Codebase](#2---get-acquainted-with-the-codebase)
 * [Implement a New Feature](#3---implement-a-new-feature)
   * [Begin Implementing the CloneReservation Screen Component](#3a---begin-implementing-the-clonereservation-screen-component)
     * [Write a Test for the Screen Component](#3ai---write-a-test-for-the-screen-component)
@@ -20,7 +20,7 @@ The feature we'll be providing the ability to clone a hotel reservation. It does
 
 ## 1 - Add Storybook
 
-First, let's add [Storybook](https://storybook.js.org/) to the project.  Storybook is a tool for developing UI components in isolation, so it's perfect for developing new features and components in isolation.  It's also a great way to get familiar with the codebase.  We'll add it to the frontend of the application.
+First, let's add **Storybook** to the project.  Storybook is a tool for developing UI components in isolation, so it's perfect for developing new features and components in isolation.  It's also a great way to get familiar with the codebase.  We'll add it to the frontend of the application.
 
 ```bash
 git clone git@github.com:WillSams/example-js-react-with-python.git tutorial
@@ -80,7 +80,7 @@ sed -i '2i\import "../public/css/application.css"' .storybook/preview.js
 
 ![6](assets/images/storybook/6.png)
 
-## 2 - Get Acquanted With the Codebase
+## 2 - Get Acquainted With the Codebase
 
 Let's write our first story.  To get better acquainted with some of the conventions of the codebase while also getting Storybook involved, let's write a story for an existing component:  the `AlertModal`.  This component is used to display alerts to the user.  It's used in a few places in the codebase, so it's a good place to start.
 
@@ -116,7 +116,7 @@ export const Danger = {
 
 ![7](assets/images/storybook/7.png)
 
-Since this is an existing component, a unit test already exists, i.e., [/frontend/specs/shared/components/AlertModal.spec.jsx](https://github.com/WillSams/example-js-react-with-python/blob/main/frontend/specs/shared/components/AlertModal.spec.jsx).  I suggest reviewing the test to learn the style of the tests within this codebase.  With that said, writing stories should help inform what tested, so keep that in mind as you go through this example.
+Since this is an existing component, a unit test already exists, i.e., [/frontend/specs/shared/components/AlertModal.spec.jsx](https://github.com/WillSams/example-js-react-with-python/blob/main/frontend/specs/shared/components/AlertModal.spec.jsx).  I suggest reviewing the tests to familiarize yourself with the testing style used in this codebase. Additionally, keep in mind that writing stories should help inform what should be tested as you go through this example.
 
 ## 3 - Implement a New Feature
 

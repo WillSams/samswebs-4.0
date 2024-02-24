@@ -6,17 +6,17 @@ The feature we'll be providing the abilitly to clone a hotel reservation.  The i
 
 ## TOC
 
-1. [Add Storybook](#1---add-storybook)
-2. [Get Acquanted With the Codebase](#2---get-acquanted-with-the-codebase)
-3. [Implement a New Feature](#3---implement-a-new-feature)
-    a. [Begin Implementing the CloneReservation Screen Component](#3a---begin-implementing-the-clonereservation-screen-component)
-      i. [Write a Test for the Screen Component](#3ai---write-a-test-for-the-screen-component)
-      ii. [Create a "Loading" Story](#3aii---create-a-loading-story)
-    b. [Connect the Screen Component to the Global State](#3b---connect-the-screen-component-to-the-global-state)
-    c.[Begin Implementing the copyReservation Saga](#3c---begin-implementing-the-copyreservation-saga)
-      i. [Write a Test for the Saga](#3ci---write-a-test-for-the-saga)
-      ii. [Create the "Loaded" Story for the Saga](#3cii---create-the-loaded-story-for-the-saga)
-4. [Conclusion](#conclusion)
+* [Add Storybook](#1---add-storybook)
+* [Get Acquanted With the Codebase](#2---get-acquanted-with-the-codebase)
+* [Implement a New Feature](#3---implement-a-new-feature)
+  * [Begin Implementing the CloneReservation Screen Component](#3a---begin-implementing-the-clonereservation-screen-component)
+    * [Write a Test for the Screen Component](#3ai---write-a-test-for-the-screen-component)
+    * [Create a "Loading" Story](#3aii---create-a-loading-story)
+  * [Connect the Screen Component to the Global State](#3b---connect-the-screen-component-to-the-global-state)
+  * [Begin Implementing the copyReservation Saga](#3c---begin-implementing-the-copyreservation-saga)
+    * [Write a Test for the Saga](#3ci---write-a-test-for-the-saga)
+    * [Create the "Loaded" Story](#3cii---create-the-loaded-story)
+* [Conclusion](#conclusion)
 
 ## 1 - Add Storybook
 
@@ -102,7 +102,7 @@ export const Danger = {
 };' >| stories/shared/components/AlertModal.stories.jsx
 ```
 
-**todo** insert pic here
+![7](assets/images/storybook/7.png)
 
 Since this is an existing component, a unit test already exists, i.e., [/frontend/specs/shared/components/AlertModal.spec.jsx](/frontend/specs/shared/components/AlertModal.spec.jsx).  I suggest reviewing the test to learn the style of the tests within this codebase.  With that said, writing stories should help inform what tested, so keep that in mind as you go through this example.
 
@@ -502,7 +502,7 @@ jest specs/screens/reservations/clone.spec.jsx
 
 #### 3ci - Write a Test for the Saga
 
-#### 3cii - Create the "Loaded" Story for the Saga
+#### 3cii - Create the "Loaded" Story
 
 Now let's write our next story, test it, a
 

@@ -24,7 +24,10 @@ First, let's add [Storybook](https://storybook.js.org/) to the project.  Storybo
 
 ```bash
 git clone git@github.com:WillSams/example-js-react-with-python.git tutorial
-cd tutorial/frontend
+
+# Let's remove the git history so we can start fresh
+cd tutorial && rm -rf .git
+git init && git add . && git commit -m "Initial commit"
 
 # if you are using nvm
 nvm use  
@@ -33,6 +36,8 @@ nvm use
 # a new branch for feature development
 git checkout -b feat/add-clone-capability  
 
+# Now let's add Storybook
+cd tutorial/frontend
 npx --yes -p @storybook/cli sb init --type react
 # NOTE:  when prompted, say "no" to more no to more eslint rules
 ```
@@ -213,7 +218,7 @@ export default ProviderDecorator;" >| .storybook/ProviderDecorator.jsx
 
 ![14](assets/images/storybook/14.png)
 
-Now let's write our a story to help us build out our component:
+Now let's write our a stories to help us build out our component:
 
 ```bash
 echo "import CloneReservationComponent from '@/screens/reservations/clone';
@@ -260,23 +265,21 @@ const loadingState = {
     },
   },
 };
+
 export const Loading = {
   decorators: [
     (story) => (
       <ProviderDecorator initialState={loadingState} children={story()} />
     ),
   ],
-};" >| stories/screens/reservations/clone.stories.jsx
+}" >| stories/screens/reservations/clone.stories.jsx
 ```
 
-**todo** insert pic here - the story listed above
-
-**todo** insert pic here - the storybook screen re-iterating the below statement
+![15](assets/images/storybook/15.png)
 
 Looking at Storybook, the visual look of `Default` and `Loading` look the same.  Let's start by modifying the UI of the component to design what it should look like.
 
-We'll begin this by writing a test to ensure that the loading state is being handled.  We'll modify the original test to pass and the second test
-to fail (NOTE: cheating here for brevity of this example, we should normally focus on one test at a time):
+We'll begin this by writing a test to ensure that the loading state is being handled.  We'll modify the original test to pass and the second test to fail (NOTE: cheating here for brevity of this example, we should normally focus on one test at a time):
 
 ```bash
 echo "import { screen } from '@testing-library/react';
@@ -290,22 +293,22 @@ import CloneReservationComponent from '@/screens/reservations/clone';
 import { render } from '../../reactTestHelpers';
 
 describe('CloneReservationComponent', () => {
-  it('should render component once loaded', async () => {
-    const pathname = '/reservations/clones';
-    const initialEntries = [pathname];
-    const initialState = {
-      shared: { ...defaultShared },
-      router: { location: { pathname } },
-      site: {
-        reservations: {
-          cloneReservation: {
-            loading: false,
-            reservationId: 999,
-          },
+  const pathname = '/reservations/clones';
+  const initialState = {
+    shared: { ...defaultShared },
+    router: { location: { pathname } },
+    site: {
+      reservations: {
+        cloneReservation: {
+          loading: false,
+          reservationId: 999,
         },
       },
-    };
+    },
+  };
 
+  it('should render component once loaded', async () => {
+    const initialEntries = [pathname];
     const ui = <CloneReservationComponent />;
     render(ui, { initialState, initialEntries });
 
@@ -315,51 +318,48 @@ describe('CloneReservationComponent', () => {
   });
 
   it('should render loading animation if screen is loading', async () => {
-    const pathname = '/reservations/clones';
     const initialEntries = [pathname];
-    const initialState = {
-      shared: { ...defaultShared },
-      router: { location: { pathname } },
+    const loadingState = {
+      ...initialState,
       site: {
         reservations: {
           cloneReservation: {
             loading: true,
-            reservationId: 999,
+            reservation_id: 999,
           },
         },
       },
     };
-
     const ui = (
       <div>
         <CloneReservationComponent />
       </div>
     );
 
-    render(ui, { initialState, initialEntries });
+    render(ui, { initialState: loadingState, initialEntries });
 
-    const image = screen.getByAltText('Loading'); // Adjust this selector based on how you've set up the alt text
+    const image = screen.getByAltText('Loading');
     expect(image).toBeInTheDocument();
     expect(image.src).toContain('/img/loading.gif');
   });
 });" >| specs/screens/reservations/clone.spec.jsx
 ```
 
-**todo** insert pic here
+![16](assets/images/storybook/16.png)
 
 ```bash
 jest specs/screens/reservations/clone.spec.jsx  # test fails
 ```
 
-**todo** insert pic here
+![17](assets/images/storybook/17.png)
 
 Now let's modify the CloneReservation component to handle the loading state...:
 
 ```bash
-echo "import React from 'react';
+echo 'import React from "react";
 
-import { useSelector } from 'react-redux';
-import { Loading } from '@/shared/components';
+import { useSelector } from "react-redux";
+import { Loading } from "@/shared/components";
 
 const CloneReservationComponent = () => {
   const loading = useSelector(state => state?.site?.reservations?.cloneReservation?.loading);
@@ -371,10 +371,10 @@ const CloneReservationComponent = () => {
   );
 };
 
-export default CloneReservationComponent;" >| src/screens/reservations/clone.jsx
+export default CloneReservationComponent;' >| src/screens/reservations/clone.jsx
 ```
 
-**todo** insert pic here
+![18](assets/images/storybook/18.png)
 
 ...and to pass our test:
 
@@ -382,7 +382,16 @@ export default CloneReservationComponent;" >| src/screens/reservations/clone.jsx
 jest specs/screens/reservations/clone.spec.jsx  # test passes
 ```
 
-**todo** insert pic here
+![19](assets/images/storybook/19.png)
+
+Now let's commit our changes:
+
+```bash
+git add .
+git commit -m "Add loading indicator to clone component for async actions"
+```
+
+![20](assets/images/storybook/20.png)
 
 ## 3b - Connect the Screen Component to the Global State
 
@@ -390,25 +399,27 @@ Great!  Now let's use [Redux-Saga](https://redux-saga.js.org/) to load the reser
   
 ```bash
 sed -e "/GET_RESERVATION: 'site\/reservations\/show\/GET_RESERVATION',/r"<(
-echo "
+echo '
 LOAD_CLONE_RESERVATION_COMPONENT:
-'site/reservations/clone/LOAD_CLONE_RESERVATION_COMPONENT',
+"site/reservations/clone/LOAD_CLONE_RESERVATION_COMPONENT",
   LOAD_CLONE_RESERVATION_COMPONENT_SUCCESS:
-    'site/reservations/clone/LOAD_CLONE_RESERVATION_COMPONENT_SUCCESS',
+    "site/reservations/clone/LOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",
   LOAD_CLONE_RESERVATION_COMPONENT_FAILED:
-    'site/reservations/clone/LOAD_CLONE_RESERVATION_COMPONENT_SUCCESS',
+    "site/reservations/clone/LOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",
 
   UNLOAD_CLONE_RESERVATION_COMPONENT:
-    'site/reservations/clone/UNLOAD_CLONE_RESERVATION_COMPONENT',
+    "site/reservations/clone/UNLOAD_CLONE_RESERVATION_COMPONENT",
   UNLOAD_CLONE_RESERVATION_COMPONENT_SUCCESS:
-    'site/reservations/clone/UNLOAD_CLONE_RESERVATION_COMPONENT_SUCCESS',
+    "site/reservations/clone/UNLOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",
   UNLOAD_CLONE_RESERVATION_COMPONENT_FAILED:
-    'site/reservations/clone/UNLOAD_CLONE_RESERVATION_COMPONENT_SUCCESS',
+    "site/reservations/clone/UNLOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",
 
-  CLONE_RESERVATION_COMPONENT: 'site/reservations/CLONE_RESERVATION_COMPONENT',
-  COPY_RESERVATION: 'site/reservations/clone/COPY_RESERVATION',"
+  CLONE_RESERVATION_COMPONENT: "site/reservations/CLONE_RESERVATION_COMPONENT",
+  COPY_RESERVATION: "site/reservations/clone/COPY_RESERVATION",'
   ) -i -- src/shared/base/actionCreators.js
 ```
+
+![21](assets/images/storybook/21.png)
 
 Next, the reducer.  We'll create a new file for it and add it to the **reservations screen reducer** file and the main **screens reducer** file:
   

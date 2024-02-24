@@ -2,7 +2,7 @@
 
 This is a script to help guide you through the process of driving development in a React/Redux application.  The goal of this tutorial is help you get a feel for the process of implementing a new feature in a React+Redux application based on the conventions used in this codebase.
 
-The feature we'll be providing the abilitly to clone a hotel reservation.  The instructions are written in a way that assumes you are using a Unix-based system.  If you are using Windows, please use [WSL](https://learn.microsoft.com/en-us/windows/wsl/about), [Git Bash](https://gitforwindows.org/), or [Msys2](https://www.msys2.org/).  **For the path of least resistance, I recommend WSL.**
+The feature we'll be providing the ability to clone a hotel reservation. It doesn't make sense, just go with it. The instructions are written in a way that assumes you are using a Unix-based system.  If you are using Windows, please use [WSL](https://learn.microsoft.com/en-us/windows/wsl/about), [Git Bash](https://gitforwindows.org/), or [Msys2](https://www.msys2.org/).  **For the path of least resistance, I recommend WSL.**
 
 ## TOC
 
@@ -30,7 +30,7 @@ cd tutorial && rm -rf .git
 git init && git add . && git commit -m "Initial commit"
 
 # if you are using nvm
-nvm use  
+nvm use
 
 # since we are doing multiple stories for a feature, create 
 # a new branch for feature development
@@ -385,7 +385,6 @@ jest specs/screens/reservations/clone.spec.jsx  # test passes
 ![19](assets/images/storybook/19.png)
 ![19b](assets/images/storybook/19-b.png)
 
-
 Now let's commit our changes:
 
 ```bash
@@ -464,16 +463,16 @@ const siteReducer = combineReducers({
 export default siteReducer;" >| src/screens/reducer.js
 ```
 
-**todo** insert pic here - with 3 panes in Vim showing each file
+![22](assets/images/storybook/22.png)
 
 Finally, let's connect our clone reservation screen component to the frontend client's global state:
 
 ```bash
-echo 'import { default as HomeComponent } from './home';
-import { default as EditReservationComponent } from './reservations/edit';
-import { default as NewReservationComponent } from './reservations/new';
-import { default as ShowReservationComponent } from './reservations/show';
-import { default as CloneReservationComponent } from './reservations/clone';
+echo 'import { default as HomeComponent } from "./home";
+import { default as EditReservationComponent } from "./reservations/edit";
+import { default as NewReservationComponent } from "./reservations/new";
+import { default as ShowReservationComponent } from "./reservations/show";
+import { default as CloneReservationComponent } from "./reservations/clone";
 
 export default {
   HomeComponent,
@@ -483,10 +482,11 @@ export default {
   ShowReservationComponent,
 };' >| src/screens/index.js
 
-echo "import React from 'react';
+echo 'import React from "react";
 
-import { useSelector } from 'react-redux';
-import { Loading } from '@/shared/components';
+import { useSelector } from "react-redux";
+import { actionCreators, connectComponent } from "@/shared/base";
+import { Loading } from "@/shared/components";
 
 const CloneReservationComponent = () => {
   const loading = useSelector(state => state?.site?.reservations?.cloneReservation?.loading);
@@ -510,16 +510,28 @@ const screen = connectComponent(CloneReservationComponent, {
   }),
 });
 
-export default screen;" >| src/screens/reservations/clone.jsx
+export default screen;' >| src/screens/reservations/clone.jsx
 ```
 
-**todo** insert pic here - with 2 panes in Vim showing each file
+![23-a](assets/images/storybook/23a.png)
+![23-b](assets/images/storybook/23b.png)
 
 The original tests should still pass
 
 ```bash
 jest specs/screens/reservations/clone.spec.jsx 
 ```
+
+![24](assets/images/storybook/24.png)
+
+Now let's commit our changes:
+
+```bash
+git add .
+git commit -m "Connect clone component to global state"
+```
+
+![25](assets/images/storybook/25.png)
 
 ### 3c - Begin Implementing the copyReservation Saga
 

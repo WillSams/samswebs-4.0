@@ -25,7 +25,14 @@ First, let's add [Storybook](https://storybook.js.org/) to the project.  Storybo
 ```bash
 git clone git@github.com:WillSams/example-js-react-with-python.git tutorial
 cd tutorial/frontend
-nvm use                 # if you are using nvm
+
+# if you are using nvm
+nvm use  
+
+# since we are doing multiple stories for a feature, create 
+# a new branch for feature development
+git checkout -b feat/add-clone-capability  
+
 npx --yes -p @storybook/cli sb init --type react
 # NOTE:  when prompted, say "no" to more no to more eslint rules
 ```
@@ -104,7 +111,7 @@ export const Danger = {
 
 ![7](assets/images/storybook/7.png)
 
-Since this is an existing component, a unit test already exists, i.e., [/frontend/specs/shared/components/AlertModal.spec.jsx](/frontend/specs/shared/components/AlertModal.spec.jsx).  I suggest reviewing the test to learn the style of the tests within this codebase.  With that said, writing stories should help inform what tested, so keep that in mind as you go through this example.
+Since this is an existing component, a unit test already exists, i.e., [/frontend/specs/shared/components/AlertModal.spec.jsx](https://github.com/WillSams/example-js-react-with-python/blob/main/frontend/specs/shared/components/AlertModal.spec.jsx).  I suggest reviewing the test to learn the style of the tests within this codebase.  With that said, writing stories should help inform what tested, so keep that in mind as you go through this example.
 
 ## 3 - Implement a New Feature
 
@@ -125,11 +132,11 @@ const CloneReservationComponent = () => {
 export default CloneReservationComponent;' >| src/screens/reservations/clone.jsx
 ```
 
-**todo** insert pic here
+![8](assets/images/storybook/8.png)
 
 #### 3ai - Write a Test for the Screen Component
 
-We'll use the test to drive the development of the component.  First we'll write a test that will fail, then we'll modify the component to make the test pass.
+We'll use the test to also help drive the development of the component.  First we'll write a test that will fail, then we'll modify the component to make the test pass.
 
 ```bash
 echo "import { screen } from '@testing-library/react';
@@ -142,8 +149,8 @@ import CloneReservationComponent from '@/screens/reservations/clone';
 import { render } from '../../reactTestHelpers';
 
 describe('CloneReservationComponent', () => {
-  it(\`should render component\`, async () => {
-    const pathname = '/reservations/clones';
+  it('should render component', async () => {
+    const pathname = '/reservations/clone';
     const initialEntries = [pathname];
     const initialState = { };
     const ui = <CloneReservationComponent />;
@@ -154,7 +161,7 @@ describe('CloneReservationComponent', () => {
 });" >| specs/screens/reservations/clone.spec.jsx
 ```
 
-**todo** insert pic here
+![9](assets/images/storybook/9.png)
 
 Now let's run the test to see it fail.  We'll create an alias for Jest to make it easier to run the test.
 
@@ -163,7 +170,7 @@ alias jest=./node_modules/jest/bin/jest.js
 jest specs/screens/reservations/clone.spec.jsx  # test should fail
 ```
 
-**todo** insert pic here
+![10](assets/images/storybook/10.png)
 
 Now let's make it pass by modifying the component:
 
@@ -172,7 +179,8 @@ sed -i 's/This text does not exist on page/This is the CloneReservationComponent
 jest specs/screens/reservations/clone.spec.jsx  # test should now pass
 ```
 
-**todo** insert pic here
+![11](assets/images/storybook/11.png)
+![12](assets/images/storybook/12.png)
 
 Before we move on, let's commit our changes:
 
@@ -180,6 +188,8 @@ Before we move on, let's commit our changes:
 git add .
 git commit -m "Create CloneReservationComponent"
 ```
+
+![13](assets/images/storybook/13.png)
 
 #### 3aii - Create a "Loading" Story
 
@@ -201,7 +211,7 @@ const ProviderDecorator = ({ initialState, children}) => (
 export default ProviderDecorator;" >| .storybook/ProviderDecorator.jsx
 ```
 
-**todo** insert pic here
+![14](assets/images/storybook/14.png)
 
 Now let's write our a story to help us build out our component:
 

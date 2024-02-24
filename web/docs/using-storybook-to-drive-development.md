@@ -353,7 +353,7 @@ jest specs/screens/reservations/clone.spec.jsx  # test fails
 
 ![17](assets/images/storybook/17.png)
 
-Now let's modify the CloneReservation component to handle the loading state...:
+Now let's modify the CloneReservation component to handle the loading state and to pass our test:
 
 ```bash
 echo 'import React from "react";
@@ -376,13 +376,15 @@ export default CloneReservationComponent;' >| src/screens/reservations/clone.jsx
 
 ![18](assets/images/storybook/18.png)
 
-...and to pass our test:
+We should now see a passing unit test and a loading indicator in Storybook:
 
 ```bash
 jest specs/screens/reservations/clone.spec.jsx  # test passes
 ```
 
 ![19](assets/images/storybook/19.png)
+![19b](assets/images/storybook/19-b.png)
+
 
 Now let's commit our changes:
 

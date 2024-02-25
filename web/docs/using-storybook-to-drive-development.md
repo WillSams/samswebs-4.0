@@ -396,28 +396,28 @@ git commit -m "Add loading indicator to clone component for async actions"
 
 ## 3b - Connect the Screen Component to the Global State
 
-Great!  Now let's use [Redux-Saga](https://redux-saga.js.org/) to load the reservation data.  Why do I use Redux+Sagas?  It's a good way to handle side effects in Redux. Instead of using Redux, I find using [Jotai](https://jotai.org/) or [Recoil](https://recoiljs.org/) to be a bit more straightforward.  However, the conventions (i.e., the `connectComponent` and `createComponentReducer` behaviors, plus the `actionCreators` object) used in this codebase is a great way to avoid *some* of the complexity of Redux.  This is how I originally learned to do global state management in React, and it still resonates with me.
+Great!  Now let's use [Redux-Saga](https://redux-saga.js.org/) to load the reservation data.  Why do I use Redux+Sagas?  It's a good way to handle side effects in Redux. Instead of using Redux, I find using [Jotai](https://jotai.org/) or [Recoil](https://recoiljs.org/) to be a bit more straightforward.  However, the conventions (i.e., the `connectComponent` and `createComponentReducer` behaviors, plus the `actionTypes` object + `actionCreators` configuration) used in this codebase is a great way to avoid *some* of the complexity of Redux.  This is how I originally learned to do global state management in React, and it still resonates with me.
   
 ```bash
 sed -e "/GET_RESERVATION: 'site\/reservations\/show\/GET_RESERVATION',/r"<(
 echo '
-LOAD_CLONE_RESERVATION_COMPONENT:
-"site/reservations/clone/LOAD_CLONE_RESERVATION_COMPONENT",
-  LOAD_CLONE_RESERVATION_COMPONENT_SUCCESS:
-    "site/reservations/clone/LOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",
-  LOAD_CLONE_RESERVATION_COMPONENT_FAILED:
-    "site/reservations/clone/LOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",
+LOAD_COPY_RESERVATION_COMPONENT:
+"site/reservations/clone/LOAD_COPY_RESERVATION_COMPONENT",
+  LOAD_COPY_RESERVATION_COMPONENT_SUCCESS:
+    "site/reservations/clone/LOAD_COPY_RESERVATION_COMPONENT_SUCCESS",
+  LOAD_COPY_RESERVATION_COMPONENT_FAILED:
+    "site/reservations/clone/LOAD_COPY_RESERVATION_COMPONENT_SUCCESS",
 
-  UNLOAD_CLONE_RESERVATION_COMPONENT:
-    "site/reservations/clone/UNLOAD_CLONE_RESERVATION_COMPONENT",
-  UNLOAD_CLONE_RESERVATION_COMPONENT_SUCCESS:
-    "site/reservations/clone/UNLOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",
-  UNLOAD_CLONE_RESERVATION_COMPONENT_FAILED:
-    "site/reservations/clone/UNLOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",
+  UNLOAD_COPY_RESERVATION_COMPONENT:
+    "site/reservations/clone/UNLOAD_COPY_RESERVATION_COMPONENT",
+  UNLOAD_COPY_RESERVATION_COMPONENT_SUCCESS:
+    "site/reservations/clone/UNLOAD_COPY_RESERVATION_COMPONENT_SUCCESS",
+  UNLOAD_COPY_RESERVATION_COMPONENT_FAILED:
+    "site/reservations/clone/UNLOAD_COPY_RESERVATION_COMPONENT_SUCCESS",
 
-  CLONE_RESERVATION_COMPONENT: "site/reservations/CLONE_RESERVATION_COMPONENT",
+  COPY_RESERVATION_COMPONENT: "site/reservations/COPY_RESERVATION_COMPONENT",
   COPY_RESERVATION: "site/reservations/clone/COPY_RESERVATION",'
-  ) -i -- src/shared/base/actionCreators.js
+  ) -i -- src/shared/base/actionTypes.js
 ```
 
 ![21](assets/images/storybook/21.png)
@@ -425,7 +425,7 @@ LOAD_CLONE_RESERVATION_COMPONENT:
 Next, the reducer.  We'll create a new file for it and add it to the **reservations screen reducer** file and the main **screens reducer** file:
   
 ```bash
-echo "import { actionCreators, createComponentReducer } from '@/shared/base';
+echo "import { actionTypes, createComponentReducer } from '@/shared/base';
 
 const initialState = {
   loading: true,
@@ -433,7 +433,7 @@ const initialState = {
 
 const actionHandlers = {};
 const reducer = createComponentReducer(
-  actionCreators.CLONE_RESERVATION_COMPONENT,
+  actionTypes.COPY_RESERVATION_COMPONENT,
   initialState,
   actionHandlers,
 );
@@ -485,7 +485,7 @@ export default {
 echo 'import React from "react";
 
 import { useSelector } from "react-redux";
-import { actionCreators, connectComponent } from "@/shared/base";
+import { actionTypes, connectComponent } from "@/shared/base";
 import { Loading } from "@/shared/components";
 
 const CloneReservationComponent = () => {
@@ -499,14 +499,14 @@ const CloneReservationComponent = () => {
 };
 
 const screen = connectComponent(CloneReservationComponent, {
-  componentName: actionCreators.CLONE_RESERVATION_COMPONENT,
+  componentName: actionTypes.COPY_RESERVATION_COMPONENT,
   state: (state) => state?.site?.newReservations?.reservation,
   load: {
-    reservation: () => ({ type: actionCreators.GET_RESERVATION }),
+    reservation: () => ({ type: actionTypes.GET_RESERVATION }),
   },
-  dispatch: (dispatch) => ({
-    createReservation: (reservationId) =>
-      dispatch({ type: actionCreators.CLONE_RESERVATION, reservationId }),
+  actionCreators: (dispatch) => ({
+    cloneReservation: (reservationId) =>
+      dispatch({ type: actionTypes.COPY_RESERVATION, reservationId }),
   }),
 });
 

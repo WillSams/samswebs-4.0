@@ -129,7 +129,7 @@ echo 'import React from "react";
 const CloneReservationComponent = () => {
   return (
     <>
-      <span>This is the CloneReservationComponent</span>
+      <h1>Clone Reservation</h1>
     </>
   );
 };
@@ -282,51 +282,47 @@ Looking at Storybook, the visual look of `Default` and `Loading` look the same. 
 We'll begin this by writing a test to ensure that the loading state is being handled.  We'll modify the original test to pass and the second test to fail (NOTE: cheating here for brevity of this example, we should normally focus on one test at a time):
 
 ```bash
-echo "import { screen } from '@testing-library/react';
+echo "import { screen } from "@testing-library/react";
 
-import React from 'react';
+import React from "react";
 
-import { initialState as defaultShared } from '@/shared/sharedReducer';
-import { Loading } from '@/shared/components';
-import CloneReservationComponent from '@/screens/reservations/clone';
+import { initialState as defaultShared } from "@/shared/sharedReducer";
+import { Loading } from "@/shared/components";
+import CloneReservationComponent from "@/screens/reservations/clone";
 
-import { render } from '../../reactTestHelpers';
+import { render } from "../../reactTestHelpers";
 
-describe('CloneReservationComponent', () => {
-  const pathname = '/reservations/clones';
+describe("CloneReservationComponent", () => {
+  const pathname = "/reservations/clone";
   const initialState = {
     shared: { ...defaultShared },
     router: { location: { pathname } },
     site: {
-      reservations: {
         cloneReservation: {
           loading: false,
           reservationId: 999,
         },
-      },
     },
   };
 
-  it('should render component once loaded', async () => {
+  it("should render component once loaded", async () => {
     const initialEntries = [pathname];
     const ui = <CloneReservationComponent />;
     render(ui, { initialState, initialEntries });
 
     expect(
-      screen.getByText(/This is the CloneReservationComponent/i),
+      screen.getByText(/Clone Reservation/i),
     ).toBeInTheDocument();
   });
 
-  it('should render loading animation if screen is loading', async () => {
+  it("should render loading animation if screen is loading", async () => {
     const initialEntries = [pathname];
     const loadingState = {
       ...initialState,
       site: {
-        reservations: {
           cloneReservation: {
             loading: true,
             reservation_id: 999,
-          },
         },
       },
     };
@@ -338,11 +334,11 @@ describe('CloneReservationComponent', () => {
 
     render(ui, { initialState: loadingState, initialEntries });
 
-    const image = screen.getByAltText('Loading');
+    const image = screen.getByAltText("Loading");
     expect(image).toBeInTheDocument();
-    expect(image.src).toContain('/img/loading.gif');
+    expect(image.src).toContain("/img/loading.gif");
   });
-});" >| specs/screens/reservations/clone.spec.jsx
+}); >| specs/screens/reservations/clone.spec.jsx
 ```
 
 ![16](assets/images/storybook/16.png)
@@ -359,14 +355,14 @@ Now let's modify the CloneReservation component to handle the loading state and 
 echo 'import React from "react";
 
 import { useSelector } from "react-redux";
-import { Loading } from "@/shared/components";
+import Loading  from "@/shared/components/Loading";
 
 const CloneReservationComponent = () => {
-  const loading = useSelector(state => state?.site?.reservations?.cloneReservation?.loading);
+  const loading = useSelector(state => state?.site?.cloneReservation?.loading);
   return (
     <>
       {loading && (<Loading />)}
-      {!loading && (<span>This is the CloneReservationComponent</span>)}  
+      {!loading && (<h1>Clone Reservation</h1>)}  
     </>
   );
 };
@@ -401,22 +397,23 @@ Great!  Now let's use [Redux-Saga](https://redux-saga.js.org/) to load the reser
 ```bash
 sed -e "/GET_RESERVATION: 'site\/reservations\/show\/GET_RESERVATION',/r"<(
 echo '
-LOAD_COPY_RESERVATION_COMPONENT:
-"site/reservations/clone/LOAD_COPY_RESERVATION_COMPONENT",
-  LOAD_COPY_RESERVATION_COMPONENT_SUCCESS:
-    "site/reservations/clone/LOAD_COPY_RESERVATION_COMPONENT_SUCCESS",
-  LOAD_COPY_RESERVATION_COMPONENT_FAILED:
-    "site/reservations/clone/LOAD_COPY_RESERVATION_COMPONENT_SUCCESS",
 
-  UNLOAD_COPY_RESERVATION_COMPONENT:
-    "site/reservations/clone/UNLOAD_COPY_RESERVATION_COMPONENT",
-  UNLOAD_COPY_RESERVATION_COMPONENT_SUCCESS:
-    "site/reservations/clone/UNLOAD_COPY_RESERVATION_COMPONENT_SUCCESS",
-  UNLOAD_COPY_RESERVATION_COMPONENT_FAILED:
-    "site/reservations/clone/UNLOAD_COPY_RESERVATION_COMPONENT_SUCCESS",
+  LOAD_CLONE_RESERVATION_COMPONENT:
+    "site/reservations/COPY/LOAD_CLONE_RESERVATION_COMPONENT",
+  LOAD_CLONE_RESERVATION_COMPONENT_SUCCESS:
+    "site/reservations/COPY/LOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",H
+  LOAD_CLONE_RESERVATION_COMPONENT_FAILED:
+    "site/reservations/COPY/LOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",
 
-  COPY_RESERVATION_COMPONENT: "site/reservations/COPY_RESERVATION_COMPONENT",
-  COPY_RESERVATION: "site/reservations/clone/COPY_RESERVATION",'
+  UNLOAD_CLONE_RESERVATION_COMPONENT:
+    "site/reservations/COPY/UNLOAD_CLONE_RESERVATION_COMPONENT",
+  UNLOAD_CLONE_RESERVATION_COMPONENT_SUCCESS:
+    "site/reservations/COPY/UNLOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",
+  UNLOAD_CLONE_RESERVATION_COMPONENT_FAILED:
+    "site/reservations/COPY/UNLOAD_CLONE_RESERVATION_COMPONENT_SUCCESS",
+
+  CLONE_RESERVATION_COMPONENT: "site/reservations/CLONE_RESERVATION_COMPONENT",
+  COPY_RESERVATION: "site/reservations/COPY/COPY_RESERVATION",'
   ) -i -- src/shared/base/actionTypes.js
 ```
 
@@ -425,32 +422,52 @@ LOAD_COPY_RESERVATION_COMPONENT:
 Next, the reducer.  We'll create a new file for it and add it to the **reservations screen reducer** file and the main **screens reducer** file:
   
 ```bash
-echo "import { actionTypes, createComponentReducer } from '@/shared/base';
+echo "import {
+  actionTypes,
+  createComponentReducer,
+  onSuccessful,
+} from "@/shared/base";
 
 const initialState = {
   loading: true,
+  reservation: null,
 };
 
-const actionHandlers = {};
+const actionHandlers = {
+  [onSuccessful(actionTypes.GET_RESERVATION)]: (state, action) => {
+    const reservation = action?.response?.data || [];
+    return {
+      ...state,
+      reservation,
+      loading: false,
+    };
+  },
+  [onSuccessful(actionTypes.CLONE_RESERVATION)]: (state, _action) => {
+    return {
+      ...state,
+      loading: false,
+    };
+  },
+};
 const reducer = createComponentReducer(
-  actionTypes.COPY_RESERVATION_COMPONENT,
+  actionTypes.CLONE_RESERVATION_COMPONENT,
   initialState,
   actionHandlers,
 );
 
 export { reducer };" >| src/screens/reservations/reducers/clone.js
 
-echo "import { reducer as cloneReducer } from './clone';
-import { reducer as editReducer } from './edit';
-import { reducer as newReducer } from './new';
-import { reducer as showReducer } from './show';
+echo 'import { reducer as cloneReducer } from "./clone";
+import { reducer as editReducer } from "./edit";
+import { reducer as newReducer } from "./new";
+import { reducer as showReducer } from "./show";
 
-export { cloneReducer, editReducer, newReducer, showReducer };" >| src/screens/reservations/reducers/index.js
+export { cloneReducer, editReducer, newReducer, showReducer };' >| src/screens/reservations/reducers/index.js
 
-echo "import { combineReducers } from 'redux';
+echo 'import { combineReducers } from "redux";
 
-import { homeReducer } from './home/reducers';
-import { cloneReducer, newReducer, showReducer, editReducer } from './reservations/reducers';
+import { homeReducer } from "./home/reducers";
+import { cloneReducer, newReducer, showReducer, editReducer } from "./reservations/reducers";
 
 const siteReducer = combineReducers({
   home: homeReducer,
@@ -460,7 +477,7 @@ const siteReducer = combineReducers({
   cloneReservation: cloneReducer,
 });
 
-export default siteReducer;" >| src/screens/reducer.js
+export default siteReducer;' >| src/screens/reducer.js
 ```
 
 ![22](assets/images/storybook/22.png)
@@ -469,10 +486,11 @@ Finally, let's connect our clone reservation screen component to the frontend cl
 
 ```bash
 echo 'import { default as HomeComponent } from "./home";
-import { default as EditReservationComponent } from "./reservations/edit";
-import { default as NewReservationComponent } from "./reservations/new";
-import { default as ShowReservationComponent } from "./reservations/show";
-import { default as CloneReservationComponent } from "./reservations/clone";
+
+import CloneReservationComponent from "./reservations/clone";
+import EditReservationComponent from "./reservations/edit";
+import NewReservationComponent from "./reservations/new";
+import ShowReservationComponent from "./reservations/show";
 
 export default {
   HomeComponent,
@@ -483,30 +501,51 @@ export default {
 };' >| src/screens/index.js
 
 echo 'import React from "react";
-
 import { useSelector } from "react-redux";
-import { actionTypes, connectComponent } from "@/shared/base";
-import { Loading } from "@/shared/components";
 
-const CloneReservationComponent = () => {
-  const loading = useSelector(state => state?.site?.reservations?.cloneReservation?.loading);
+import { connectComponent, actionTypes } from "@/shared/base";
+import Loading from "@/shared/components/Loading";
+
+const CloneReservationComponent = ({
+  cloneReservation = () => {},
+}) => {
+  const loading = useSelector(
+    (state) => state?.site?.cloneReservation?.loading,
+  );
+  const reservation = useSelector(
+    (state) => state?.site?.cloneReservation?.reservation,
+  );
   return (
     <>
       {loading && (<Loading />)}
-      {!loading && (<span>This is the CloneReservationComponent</span>)}  
+      {!loading && (
+        <div>
+          <h1>Clone Reservation</h1>
+          <div>
+            <button
+              onClick={() => {
+                cloneReservation(reservation.id);
+              }}
+            >
+              Clone
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
 
 const screen = connectComponent(CloneReservationComponent, {
-  componentName: actionTypes.COPY_RESERVATION_COMPONENT,
-  state: (state) => state?.site?.newReservations?.reservation,
+  componentName: actionTypes.CLONE_RESERVATION_COMPONENT,
+  state: (state) => state?.site?.cloneReservation?.reservation,
   load: {
-    reservation: () => ({ type: actionTypes.GET_RESERVATION }),
+    reservation: () => ({ type: actionTypes.GET_RESERVATION}),
   },
   actionCreators: (dispatch) => ({
     cloneReservation: (reservationId) =>
-      dispatch({ type: actionTypes.COPY_RESERVATION, reservationId }),
+      dispatch({ type: actionTypes.CLONE_RESERVATION, reservationId }),
+    handleCloseAlert: () => dispatch({ type: actionTypes.CLEAR_ALERT }),
   }),
 });
 
@@ -534,6 +573,80 @@ git commit -m "Connect clone component to global state"
 ![25](assets/images/storybook/25.png)
 
 ### 3c - Begin Implementing the copyReservation Saga
+
+As mentioned earlier, we'll use Redux-Saga to load the reservation data.  I suggest for better clarity, you should read this [article](https://blog.logrocket.com/understanding-redux-saga-action-creators-sagas/) before moving further.  For this codebase, you'll need to understand the relationship on how we'll handle asynchronous actions versus both the out-of-the-box Redux behavior and Redux Thunk.  
+
+Since this article is about using Storybook to drive development client-side, we'll mock the API call to load and clone the reservation.  To do this, we'll install **msw** (Mock Service Worker) and set it up for Storybook:
+
+```bash
+# reminder: you should be in the frontend directory throughout this article
+npm i msw msw-storybook-addon --save-dev
+
+echo '/** @type { import("@storybook/react").Preview } */
+import { initialize, mswLoader } from "msw-storybook-addon";
+
+import "../public/css/application.css";
+
+initialize(); // init the mock service worker
+
+const preview = {
+  parameters: {
+    actions: { argTypesRegex: "^on[A-Z].*" },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+  },
+  loaders: [mswLoader],
+};
+
+export default preview;' >| storybook/preview.js
+
+```
+
+Let's begin by writing a base for the saga:
+
+```bash
+echo 'import { call, put, takeLatest } from "redux-saga/effects";
+
+import { actionTypes, onFailure, onSuccess } from "@/shared/base";
+
+import { graphql as mockApi } from "msw";
+
+export function* copyReservation({ reservationId }) {
+  try {
+    const response = yield call(fetch, "/api/reservations/clone", {
+      method: "POST",
+      body: JSON.stringify({ reservationId }),
+    });
+    const data = yield response.json();
+    yield put({ type: onSuccess(actionTypes.COPY_RESERVATION), data });
+  } catch (error) {
+    const message = "Failed to clone reservation";
+    const alertType = "danger";
+    yield put({ type: onFailure(actionTypes.COPY_RESERVATION), alertType, message });
+    yield put({ type: actionTypes.SET_ALERT, alertType, message });
+  }
+}
+
+export function* saga() {
+  yield takeLatest(actionTypes.COPY_RESERVATION, copyReservation);
+}
+
+export default saga;' >| src/screens/reservations/sagas/copyReservation.js
+
+echo 'import { all } from 'redux-saga/effects';
+
+import copyReservation from './copyReservation';
+import getAllRoomIds from './getAllRoomIds';
+import newReservation from './newReservation';
+
+export default function* rootSaga() {
+  yield all([copyReservation(), getAllRoomIds(), newReservation()]);
+}' >| src/screens/reservations/sagas/index.js
+```
 
 #### 3ci - Write a Test for the Saga
 
